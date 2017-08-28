@@ -180,7 +180,7 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>text</key>
 				<string></string>
 				<key>title</key>
-				<string>Issue created!</string>
+				<string>Issue has been created!</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -200,11 +200,7 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<string>qry="{query}"
 qry="${qry// /}"
 
-if [[ -z $qry ]]; then
-	open https://github.com/settings/tokens/new
-else
-	ruby github.rb --auth "$qry" &gt;/dev/null
-fi</string>
+ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -215,7 +211,7 @@ fi</string>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>56F705A0-0D81-48D4-9119-2B416CA24402</string>
+			<string>832E044E-2535-4492-92A7-B3DF1977C010</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -231,33 +227,12 @@ fi</string>
 				<key>text</key>
 				<string></string>
 				<key>title</key>
-				<string>Token saved!</string>
+				<string>Repository has been saved!</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
-			<string>676982B8-FA60-4BF1-8C68-7597B85D3CAD</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
-				<key>argumenttype</key>
-				<integer>0</integer>
-				<key>keyword</key>
-				<string>gh-auth</string>
-				<key>subtext</key>
-				<string>issue-create</string>
-				<key>text</key>
-				<string>input your access token</string>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.keyword</string>
-			<key>uid</key>
-			<string>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</string>
+			<string>64F95798-1C6A-406F-B093-61F38A61C921</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -318,12 +293,12 @@ fi</string>
 				<key>text</key>
 				<string></string>
 				<key>title</key>
-				<string>Repository saved!</string>
+				<string>{query}</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
-			<string>64F95798-1C6A-406F-B093-61F38A61C921</string>
+			<string>676982B8-FA60-4BF1-8C68-7597B85D3CAD</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -338,7 +313,12 @@ fi</string>
 				<string>qry="{query}"
 qry="${qry// /}"
 
-ruby github.rb --repo "$qry" &gt;/dev/null</string>
+if [[ -z $qry ]]; then
+	open https://github.com/settings/tokens/new
+else
+	ruby github.rb --auth "$qry" &gt;/dev/null
+	echo 'Token has been saved!'
+fi</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -349,9 +329,30 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 			<key>type</key>
 			<string>alfred.workflow.action.script</string>
 			<key>uid</key>
-			<string>832E044E-2535-4492-92A7-B3DF1977C010</string>
+			<string>56F705A0-0D81-48D4-9119-2B416CA24402</string>
 			<key>version</key>
 			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>gh-auth</string>
+				<key>subtext</key>
+				<string>Just ↩ to go to https://github.com/settings/tokens/new now to create a token with scope 'repo'.</string>
+				<key>text</key>
+				<string>input your access token</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</string>
+			<key>version</key>
+			<integer>1</integer>
 		</dict>
 	</array>
 	<key>readme</key>
@@ -363,35 +364,35 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 			<key>xpos</key>
 			<integer>350</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>410</integer>
 		</dict>
 		<key>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</key>
 		<dict>
 			<key>xpos</key>
 			<integer>100</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>410</integer>
 		</dict>
 		<key>64F95798-1C6A-406F-B093-61F38A61C921</key>
 		<dict>
 			<key>xpos</key>
 			<integer>620</integer>
 			<key>ypos</key>
-			<integer>380</integer>
+			<integer>250</integer>
 		</dict>
 		<key>676982B8-FA60-4BF1-8C68-7597B85D3CAD</key>
 		<dict>
 			<key>xpos</key>
 			<integer>620</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>410</integer>
 		</dict>
 		<key>832E044E-2535-4492-92A7-B3DF1977C010</key>
 		<dict>
 			<key>xpos</key>
 			<integer>350</integer>
 			<key>ypos</key>
-			<integer>380</integer>
+			<integer>250</integer>
 		</dict>
 		<key>8894ED17-402E-462C-A2FC-353349B23EF2</key>
 		<dict>
@@ -412,7 +413,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 			<key>xpos</key>
 			<integer>100</integer>
 			<key>ypos</key>
-			<integer>380</integer>
+			<integer>250</integer>
 		</dict>
 		<key>C297EEAE-42D1-4223-BAA3-529903988A1E</key>
 		<dict>
