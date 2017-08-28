@@ -124,27 +124,6 @@ echo "issue created!"</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>lastpathcomponent</key>
-				<false/>
-				<key>onlyshowifquerypopulated</key>
-				<false/>
-				<key>removeextension</key>
-				<false/>
-				<key>text</key>
-				<string></string>
-				<key>title</key>
-				<string>issue created</string>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.output.notification</string>
-			<key>uid</key>
-			<string>8D750A29-D975-433D-AE64-5A70ADD8E1EC</string>
-			<key>version</key>
-			<integer>1</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>alfredfiltersresults</key>
 				<false/>
 				<key>argumenttrimmode</key>
@@ -190,6 +169,27 @@ echo "issue created!"</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>{query}</string>
+				<key>title</key>
+				<string>Issue created!</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>8D750A29-D975-433D-AE64-5A70ADD8E1EC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -228,9 +228,9 @@ fi</string>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>{query}</string>
 				<key>title</key>
-				<string>token saved</string>
+				<string>Token saved!</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -245,11 +245,11 @@ fi</string>
 				<key>argumenttype</key>
 				<integer>0</integer>
 				<key>keyword</key>
-				<string>issue-auth</string>
+				<string>gh-auth</string>
 				<key>subtext</key>
 				<string></string>
 				<key>text</key>
-				<string>input your auth token</string>
+				<string>input your access token</string>
 				<key>withspace</key>
 				<true/>
 			</dict>
@@ -272,7 +272,7 @@ fi</string>
 				<key>escaping</key>
 				<integer>5</integer>
 				<key>keyword</key>
-				<string>issue-repo</string>
+				<string>repo</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -290,9 +290,9 @@ fi</string>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>change repo</string>
+				<string>Change repo</string>
 				<key>title</key>
-				<string>change repo</string>
+				<string>Change repo</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -315,9 +315,9 @@ fi</string>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string></string>
+				<string>{query}</string>
 				<key>title</key>
-				<string>repo saved</string>
+				<string>Repository saved!</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
@@ -399,14 +399,14 @@ echo "repo saved!"</string>
 			<key>xpos</key>
 			<integer>100</integer>
 			<key>ypos</key>
-			<integer>130</integer>
+			<integer>100</integer>
 		</dict>
 		<key>8D750A29-D975-433D-AE64-5A70ADD8E1EC</key>
 		<dict>
 			<key>xpos</key>
 			<integer>620</integer>
 			<key>ypos</key>
-			<integer>130</integer>
+			<integer>100</integer>
 		</dict>
 		<key>B353646A-0296-493D-860A-6FD8C74DAE9C</key>
 		<dict>
@@ -420,7 +420,7 @@ echo "repo saved!"</string>
 			<key>xpos</key>
 			<integer>350</integer>
 			<key>ypos</key>
-			<integer>130</integer>
+			<integer>100</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>

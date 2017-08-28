@@ -35,7 +35,7 @@ class Github
     results = repos.select do |repo|
       repo['name'] =~ Regexp.new(query, 'i')
     end
-    results += search_all_repos(query) if query =~ /\//
+    results += search_all_repos(query) if query =~ %r{\/}
     results.uniq
   end
 
@@ -56,17 +56,17 @@ class Github
     end
   end
 
-    # TODO: probably will do a search request instead of fetching all at once
   def cache_all_repos_for_user
     raise InvalidToken unless test_authentication
     repos = []
     repos += get_user_repos
     get_user_orgs.each do |org|
-      repos += get_org_repos( org['login'] )
+      repos += get_org_repos(org['login'])
     end
     File.open(@cache_file, 'w') do |f|
       f.write repos.to_json
     end
+
     repos
   end
 
@@ -74,18 +74,15 @@ class Github
     load_token
     load_current_repo
     uri = URI.parse("https://api.github.com/repos/#{@current_repo}/issues?access_token=#{@token}")
-    #new a http
     http = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER
 
     request = Net::HTTP::Post.new(uri.request_uri)
-    # httpリクエストヘッダの追加
     request['Content-Type'] = 'application/json'
-    request.body = { 'title' => "#{query}", 'body' => '8.25' }.to_json
+    request.body = { 'title' => query, 'body' => '8.25' }.to_json
 
     response = http.request(request)
 
-    # 返却の中身を見てみる
     puts response.message
     puts response.code
   end
@@ -103,23 +100,23 @@ class Github
   end
 
   def get_user_repos
-    res = get "/user/repos"
+    res = get '/user/repos'
     if res.is_a?(Array)
       res.map do |repo|
         { 'name' => repo['full_name'], 'url' => repo['html_url'] }
       end
-    else # TODO: handle error
+    else
       []
     end
   end
 
   def get_user_orgs
-    res = get "/user/orgs"
+    res = get '/user/orgs'
     if res.is_a?(Array)
       res.map do |org|
         { 'login' => org['login'] }
       end
-    else # TODO: handle error
+    else
       []
     end
   end
@@ -130,24 +127,24 @@ class Github
       res.map do |repo|
         { 'name' => repo['full_name'], 'url' => repo['html_url'] }
       end
-    else # TODO: handle error
+    else
       []
     end
   end
 
-    def search_all_repos(query)
+  def search_all_repos(query)
     return [] if !query || query.length == 0
     raise InvalidToken unless test_authentication
 
     parts = query.split('/', 2)
 
     if parts.length == 1 and parts[0].length > 0
-      res = get "/search/repositories", { "q" => query }
+      res = get '/search/repositories', { 'q' => query }
       if res.is_a?(Hash) and res.has_key?('items')
         res['items'].map do |repo|
           { 'name' => repo['full_name'], 'url' => repo['html_url'] }
         end
-      else # TODO: handle error
+      else
         []
       end
     elsif parts.length == 2 and parts[0].length > 0
@@ -161,7 +158,7 @@ class Github
         repos.map do |repo|
           { 'name' => repo['full_name'], 'url' => repo['html_url'] }
         end
-      else # TODO: handle error
+      else
         []
       end
     else
@@ -170,44 +167,39 @@ class Github
   end
 
   def get(path, params = {})
-    params['per_page'] = 100  # Note: 100 is the max. - see https://developer.github.com/v3/#pagination
-    qs = params.map {|k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}"}.join("&")
+    params['per_page'] = 100
+    qs = params.map {|k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}"}.join('&')
     uri = URI("#{@base_uri}#{path}?#{qs}")
 
     json_all = []
 
     begin
-
       res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
         req = Net::HTTP::Get.new(uri)
-        req['Accept'] = "application/vnd.github.v3+json"
+        req['Accept'] = 'application/vnd.github.v3+json'
         req['Authorization'] = "token #{@token}"
         http.request(req)
       end
 
       json = JSON.parse(res.body)
 
-      if not res.kind_of? Net::HTTPSuccess
+      unless res.kind_of? Net::HTTPSuccess
         return { 'error' => json['message'] }
       end
 
-      if json.is_a?(Array) # result is paged
+      if json.is_a?(Array)
         json_all.concat json
-        # See if more pages must be retrieved by testing for and extracting the link header's "next" URL.
-        # See https://developer.github.com/guides/traversing-with-pagination/
         uri = URI((res['link'].match /<([^>]+)>;\s*rel="next"/)[1]) rescue nil
         break if uri.nil?
-      else  # result is not an array and therefore not paged
+      else
         json_all = json
         break
       end
-
     end while true
 
     json_all
   end
 end
-
 
 query = ARGV[0]
 github = Github.new
@@ -218,7 +210,7 @@ begin
   elsif query == '--repo'
     github.store_current_repo(ARGV[1])
   elsif query == '--create'
-    github.create(ARGV[1].gsub(/\\/,' '))
+    github.create(ARGV[1].tr('\\', ' '))
   elsif query == '--search'
     results = github.search_repo(ARGV[1] || '')
 
@@ -246,9 +238,9 @@ begin
         end
       end
     end
-  end
-  puts output
 
+    puts output
+  end
 rescue InvalidToken
   output = XmlBuilder.build do |xml|
     xml.items do
