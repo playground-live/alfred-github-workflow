@@ -38,6 +38,7 @@ repo issueを作りたいRepository
 ```
 issue 名前
 ```
+![search issue](images/search_issue.png)
 
 ## issue作成
 
@@ -50,3 +51,11 @@ create-issue issueの名前
 issueが作成できました
 
 ![issue page](images/github_issue.png)
+
+## cacheのupdate
+
+```
+update-cache
+```
+
+![update cache](images/update_cache.png)

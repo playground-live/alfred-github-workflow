@@ -431,11 +431,11 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>update-issue</string>
+				<string>update-cache</string>
 				<key>subtext</key>
 				<string>Rebuilds your local cache from GitHub</string>
 				<key>text</key>
-				<string>Update local cache of repositories</string>
+				<string>Update local cache of repositories and issues</string>
 				<key>withspace</key>
 				<false/>
 			</dict>
