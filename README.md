@@ -25,12 +25,16 @@ gh-auth 取得したtoken
 
 どのRepositoryにIssueを作るか登録します
 ```
-repo
+repo issueを作りたいRepository
 ```
 
 ![select your repo]('./images/select_repo.png')
 
 ## issue作成
+
+```
+issue issueの名前
+```
 
 ![create issue]('./images/create_issue.png')
 
