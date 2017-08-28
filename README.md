@@ -4,6 +4,10 @@
 
 # 使い方
 
+ダウンロードしてください
+
+[ダウンロード](CreateIssue.alfredworkflow)
+
 ## 認証
 ```
 gh-auth
