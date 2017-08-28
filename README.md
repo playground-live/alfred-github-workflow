@@ -65,6 +65,6 @@ update-cache
 ### 開発
 
 1. 修正
-1. alfredでexport
-1. exportしてできた.alfredworkflowファイルをこのディレクトリに移動(上書き)
+1. alfredでexport
+1. exportしてできた.alfredworkflowファイルをこのディレクトリに移動(上書き)
 1. push
