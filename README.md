@@ -9,26 +9,26 @@
 gh-auth
 ```
 
-![open github page]('./images/open_auth.png')
+![open github page](images/open_auth.png)
 
 repo権限のみをつけたtokenを発行して、取得したtokenをコピーする
 
-![get auth token]('./images/get_token.png')
+![get auth token](images/get_token.png)
 
 ```
 gh-auth 取得したtoken
 ```
 
-![register your auth token]('./images/input_access_token.png')
+![register your auth token](images/input_access_token.png)
 
 ## Repositoryを登録
 
-どのRepositoryにIssueを作るか登録します
+どのRepositoryにIssueを作るか登録します
 ```
 repo issueを作りたいRepository
 ```
 
-![select your repo]('./images/select_repo.png')
+![select your repo](images/select_repo.png)
 
 ## issue作成
 
@@ -36,8 +36,8 @@ repo issueを作りたいRepository
 create-issue issueの名前
 ```
 
-![create issue]('./images/create_issue.png')
+![create issue](images/create_issue.png)
 
 issueが作成できました
 
-![create issue]('./images/github_issue.png')
+![issue page](images/github_issue.png)
