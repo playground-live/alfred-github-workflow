@@ -170,7 +170,7 @@ class Github
 
   def get(path, params = {})
     params['per_page'] = 100
-    qs = params.map {|k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}"}.join('&')
+    qs = params.map { |k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}" }.join('&')
     uri = URI("#{@base_uri}#{path}?#{qs}")
     json_all = []
 
@@ -188,7 +188,7 @@ class Github
 
       if json.is_a?(Array)
         json_all.concat json
-        uri = URI((res['link'].match(/<([^>]+)>;\s*rel="next"/))[1]) rescue nil
+        uri = URI((res['link'].match /<([^>]+)>;\s*rel="next"/ )[1]) rescue nil
         break if uri.nil?
       else
         json_all = json

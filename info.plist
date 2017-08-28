@@ -4,6 +4,8 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.issue.create.test</string>
+	<key>category</key>
+	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
 		<key>56F705A0-0D81-48D4-9119-2B416CA24402</key>
@@ -88,11 +90,11 @@
 	<key>createdby</key>
 	<string>saika</string>
 	<key>description</key>
-	<string></string>
+	<string>alfredからissueを作成できるworkflowです</string>
 	<key>disabled</key>
 	<false/>
 	<key>name</key>
-	<string>issue-create</string>
+	<string>Create issue</string>
 	<key>objects</key>
 	<array>
 		<dict>
