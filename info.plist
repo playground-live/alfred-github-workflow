@@ -105,8 +105,8 @@
 				<key>script</key>
 				<string>qry="{query}"
 qry="${qry// /}"
-ruby github.rb --create "$qry" &gt;/dev/null
-echo "issue created!"</string>
+
+ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -151,9 +151,9 @@ echo "issue created!"</string>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>input your issue title</string>
+				<string>input issue title</string>
 				<key>title</key>
-				<string>issue create</string>
+				<string>create issue</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -176,7 +176,7 @@ echo "issue created!"</string>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>{query}</string>
+				<string></string>
 				<key>title</key>
 				<string>Issue created!</string>
 			</dict>
@@ -202,7 +202,6 @@ if [[ -z $qry ]]; then
 	open https://github.com/settings/tokens/new
 else
 	ruby github.rb --auth "$qry" &gt;/dev/null
-	echo "Token saved!"
 fi</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
@@ -228,7 +227,7 @@ fi</string>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>{query}</string>
+				<string></string>
 				<key>title</key>
 				<string>Token saved!</string>
 			</dict>
@@ -247,7 +246,7 @@ fi</string>
 				<key>keyword</key>
 				<string>gh-auth</string>
 				<key>subtext</key>
-				<string></string>
+				<string>issue-create</string>
 				<key>text</key>
 				<string>input your access token</string>
 				<key>withspace</key>
@@ -290,7 +289,7 @@ fi</string>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>Change repo</string>
+				<string>issue-create</string>
 				<key>title</key>
 				<string>Change repo</string>
 				<key>type</key>
@@ -315,7 +314,7 @@ fi</string>
 				<key>removeextension</key>
 				<false/>
 				<key>text</key>
-				<string>{query}</string>
+				<string></string>
 				<key>title</key>
 				<string>Repository saved!</string>
 			</dict>
@@ -337,9 +336,7 @@ fi</string>
 				<string>qry="{query}"
 qry="${qry// /}"
 
-
-ruby github.rb --repo "$qry" &gt;/dev/null
-echo "repo saved!"</string>
+ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>

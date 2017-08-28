@@ -79,7 +79,7 @@ class Github
 
     request = Net::HTTP::Post.new(uri.request_uri)
     request['Content-Type'] = 'application/json'
-    request.body = { 'title' => query, 'body' => '8.25' }.to_json
+    request.body = { 'title' => query }.to_json
 
     response = http.request(request)
 
@@ -140,6 +140,7 @@ class Github
 
     if parts.length == 1 and parts[0].length > 0
       res = get '/search/repositories', { 'q' => query }
+
       if res.is_a?(Hash) and res.has_key?('items')
         res['items'].map do |repo|
           { 'name' => repo['full_name'], 'url' => repo['html_url'] }
@@ -149,11 +150,12 @@ class Github
       end
     elsif parts.length == 2 and parts[0].length > 0
       user = parts[0]
-      userQuery = parts[1]
+      user_query = parts[1]
       res = get "/users/#{user}/repos"
+
       if res.is_a?(Array)
         repos = res.select do |repo|
-          repo['name'] =~ Regexp.new(userQuery, 'i')
+          repo['name'] =~ Regexp.new(user_query, 'i')
         end
         repos.map do |repo|
           { 'name' => repo['full_name'], 'url' => repo['html_url'] }
@@ -170,7 +172,6 @@ class Github
     params['per_page'] = 100
     qs = params.map {|k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}"}.join('&')
     uri = URI("#{@base_uri}#{path}?#{qs}")
-
     json_all = []
 
     begin
@@ -183,13 +184,11 @@ class Github
 
       json = JSON.parse(res.body)
 
-      unless res.kind_of? Net::HTTPSuccess
-        return { 'error' => json['message'] }
-      end
+      return { 'error' => json['message'] } unless res.kind_of? Net::HTTPSuccess
 
       if json.is_a?(Array)
         json_all.concat json
-        uri = URI((res['link'].match /<([^>]+)>;\s*rel="next"/)[1]) rescue nil
+        uri = URI((res['link'].match(/<([^>]+)>;\s*rel="next"/))[1]) rescue nil
         break if uri.nil?
       else
         json_all = json
@@ -211,9 +210,11 @@ begin
     github.store_current_repo(ARGV[1])
   elsif query == '--create'
     github.create(ARGV[1].tr('\\', ' '))
+    result = github.load_current_repo
+
+    puts "#{result} #{ARGV[1].tr('\\', ' ')}"
   elsif query == '--search'
     results = github.search_repo(ARGV[1] || '')
-
     output = XmlBuilder.build do |xml|
       xml.items do
         if results.length > 0
@@ -221,7 +222,9 @@ begin
             xml.item Item.new(repo['url'], repo['name'], repo['name'], repo['url'], 'yes')
           end
         else
-          xml.item Item.new(nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png')
+          xml.item Item.new(
+            nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+          )
         end
       end
     end
@@ -234,7 +237,9 @@ begin
         if result.length > 0
           xml.item Item.new(nil, query, 'create issue', result, 'yes')
         else
-          xml.item Item.new(nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png')
+          xml.item Item.new(
+            nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+          )
         end
       end
     end
@@ -244,7 +249,9 @@ begin
 rescue InvalidToken
   output = XmlBuilder.build do |xml|
     xml.items do
-      xml.item Item.new('gh-error', 'gh-auth ', 'Missing or invalid token!', 'Please set your token with gh-auth. ↩ to go there now.', 'yes')
+      xml.item Item.new(
+        'gh-error', 'gh-auth ', 'Missing or invalid token!', 'Please set your token with gh-auth. ↩ to go there now.', 'yes'
+      )
     end
   end
 
