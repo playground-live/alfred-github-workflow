@@ -6,7 +6,7 @@
 
 ダウンロードしてください
 
-<a href="./CreateIssue.alfredworkflow?raw=true">ダウンロード</a>
+<a href="./Create issue.alfredworkflow?raw=true">ダウンロード</a>
 
 ## 認証
 ```
@@ -59,3 +59,12 @@ update-cache
 ```
 
 ![update cache](images/update_cache.png)
+
+***
+
+### 開発
+
+1. 修正
+1. alfredでexport
+1. exportしてできた.alfredworkflowファイルをこのディレクトリに移動(上書き)
+1. push
