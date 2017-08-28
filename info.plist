@@ -86,6 +86,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>923C746F-499B-47EC-A862-4FBC6F15FE25</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 	</dict>
 	<key>createdby</key>
 	<string>saika</string>
@@ -135,7 +148,7 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>escaping</key>
 				<integer>5</integer>
 				<key>keyword</key>
-				<string>issue</string>
+				<string>create-issue</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -188,6 +201,88 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 			<string>8D750A29-D975-433D-AE64-5A70ADD8E1EC</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>qry="{query}"
+
+case "$qry" in
+  https://*) # repo selected, open in browser
+	open "$qry"
+	;;
+  gh-auth*) # switch to gh-auth
+	osascript -e 'tell Application "Alfred 2" to search "'"$qry"'"'
+	;;
+  *) # rebuild cache, then repeat search
+	ruby github --update &amp;&amp;
+    osascript -e 'tell application "Alfred 2" to run trigger "report-update-complete" in workflow "sh.edgar.alfred.GithubRepos"' &amp;&amp;
+	osascript -e 'tell Application "Alfred 2" to search "gh '"$qry"'"'
+	;;
+esac</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>923C746F-499B-47EC-A862-4FBC6F15FE25</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>63</integer>
+				<key>keyword</key>
+				<string>issues</string>
+				<key>queuedelaycustom</key>
+				<integer>1</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<false/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Fetching repositories from github...</string>
+				<key>script</key>
+				<string>ruby github --issues "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search your github issues for '{query}'</string>
+				<key>title</key>
+				<string>Search your github issues</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -364,35 +459,35 @@ fi</string>
 			<key>xpos</key>
 			<integer>350</integer>
 			<key>ypos</key>
-			<integer>410</integer>
+			<integer>540</integer>
 		</dict>
 		<key>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</key>
 		<dict>
 			<key>xpos</key>
 			<integer>100</integer>
 			<key>ypos</key>
-			<integer>410</integer>
+			<integer>540</integer>
 		</dict>
 		<key>64F95798-1C6A-406F-B093-61F38A61C921</key>
 		<dict>
 			<key>xpos</key>
 			<integer>620</integer>
 			<key>ypos</key>
-			<integer>250</integer>
+			<integer>380</integer>
 		</dict>
 		<key>676982B8-FA60-4BF1-8C68-7597B85D3CAD</key>
 		<dict>
 			<key>xpos</key>
 			<integer>620</integer>
 			<key>ypos</key>
-			<integer>410</integer>
+			<integer>540</integer>
 		</dict>
 		<key>832E044E-2535-4492-92A7-B3DF1977C010</key>
 		<dict>
 			<key>xpos</key>
 			<integer>350</integer>
 			<key>ypos</key>
-			<integer>250</integer>
+			<integer>380</integer>
 		</dict>
 		<key>8894ED17-402E-462C-A2FC-353349B23EF2</key>
 		<dict>
@@ -408,12 +503,19 @@ fi</string>
 			<key>ypos</key>
 			<integer>100</integer>
 		</dict>
+		<key>923C746F-499B-47EC-A862-4FBC6F15FE25</key>
+		<dict>
+			<key>xpos</key>
+			<integer>350</integer>
+			<key>ypos</key>
+			<integer>240</integer>
+		</dict>
 		<key>B353646A-0296-493D-860A-6FD8C74DAE9C</key>
 		<dict>
 			<key>xpos</key>
 			<integer>100</integer>
 			<key>ypos</key>
-			<integer>250</integer>
+			<integer>380</integer>
 		</dict>
 		<key>C297EEAE-42D1-4223-BAA3-529903988A1E</key>
 		<dict>
@@ -421,6 +523,13 @@ fi</string>
 			<integer>350</integer>
 			<key>ypos</key>
 			<integer>100</integer>
+		</dict>
+		<key>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</key>
+		<dict>
+			<key>xpos</key>
+			<integer>100</integer>
+			<key>ypos</key>
+			<integer>240</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>

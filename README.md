@@ -33,7 +33,7 @@ repo issueを作りたいRepository
 ## issue作成
 
 ```
-issue issueの名前
+create-issue issueの名前
 ```
 
 ![create issue]('./images/create_issue.png')
