@@ -6,7 +6,7 @@
 
 ダウンロードしてください
 
-[ダウンロード](CreateIssue.alfredworkflow)
+<a href="./CreateIssue.alfredworkflow?raw=true">ダウンロード</a>
 
 ## 認証
 ```
