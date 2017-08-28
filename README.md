@@ -34,6 +34,11 @@ repo issueを作りたいRepository
 
 ![select your repo](images/select_repo.png)
 
+## issue検索
+```
+issue 名前
+```
+
 ## issue作成
 
 ```

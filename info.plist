@@ -34,6 +34,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>7C1007D8-A2D9-4279-95B4-EE402B15FFA8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>8D248992-7259-41D9-AB72-32779A35B4C7</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>832E044E-2535-4492-92A7-B3DF1977C010</key>
 		<array>
 			<dict>
@@ -52,6 +65,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>C297EEAE-42D1-4223-BAA3-529903988A1E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>8D248992-7259-41D9-AB72-32779A35B4C7</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B3D0E072-E12D-41CA-9571-A3D803FEA459</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -220,7 +246,7 @@ case "$qry" in
 	osascript -e 'tell Application "Alfred 2" to search "'"$qry"'"'
 	;;
   *) # rebuild cache, then repeat search
-	ruby github --update &amp;&amp;
+	ruby github.rb --update &amp;&amp;
     osascript -e 'tell application "Alfred 2" to run trigger "report-update-complete" in workflow "sh.edgar.alfred.GithubRepos"' &amp;&amp;
 	osascript -e 'tell Application "Alfred 2" to search "gh '"$qry"'"'
 	;;
@@ -251,7 +277,7 @@ esac</string>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>keyword</key>
-				<string>issues</string>
+				<string>issue</string>
 				<key>queuedelaycustom</key>
 				<integer>1</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -263,7 +289,7 @@ esac</string>
 				<key>runningsubtext</key>
 				<string>Fetching repositories from github...</string>
 				<key>script</key>
-				<string>ruby github --issues "{query}"</string>
+				<string>ruby github.rb --searchissues "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -355,7 +381,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>runningsubtext</key>
 				<string></string>
 				<key>script</key>
-				<string>ruby github.rb --search "{query}"</string>
+				<string>ruby github.rb --searchrepos "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -400,6 +426,27 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>keyword</key>
+				<string>gh-auth</string>
+				<key>subtext</key>
+				<string>Just ↩ to go to https://github.com/settings/tokens/new now to create a token with scope 'repo'.</string>
+				<key>text</key>
+				<string>input your access token</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>concurrently</key>
 				<false/>
 				<key>escaping</key>
@@ -431,21 +478,65 @@ fi</string>
 		<dict>
 			<key>config</key>
 			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>127</integer>
+				<key>script</key>
+				<string>ruby github.rb --update</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>8D248992-7259-41D9-AB72-32779A35B4C7</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
 				<key>argumenttype</key>
-				<integer>1</integer>
+				<integer>2</integer>
 				<key>keyword</key>
-				<string>gh-auth</string>
+				<string>update-issue</string>
 				<key>subtext</key>
-				<string>Just ↩ to go to https://github.com/settings/tokens/new now to create a token with scope 'repo'.</string>
+				<string>Rebuilds your local cache from GitHub</string>
 				<key>text</key>
-				<string>input your access token</string>
+				<string>Update local cache of repositories</string>
 				<key>withspace</key>
-				<true/>
+				<false/>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.input.keyword</string>
 			<key>uid</key>
-			<string>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</string>
+			<string>7C1007D8-A2D9-4279-95B4-EE402B15FFA8</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>lastpathcomponent</key>
+				<false/>
+				<key>onlyshowifquerypopulated</key>
+				<false/>
+				<key>removeextension</key>
+				<false/>
+				<key>text</key>
+				<string>Local cache has been rebuilt</string>
+				<key>title</key>
+				<string>Update complete!</string>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.output.notification</string>
+			<key>uid</key>
+			<string>B3D0E072-E12D-41CA-9571-A3D803FEA459</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -457,79 +548,100 @@ fi</string>
 		<key>56F705A0-0D81-48D4-9119-2B416CA24402</key>
 		<dict>
 			<key>xpos</key>
-			<integer>350</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>540</integer>
+			<integer>470</integer>
 		</dict>
 		<key>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>170</integer>
 			<key>ypos</key>
-			<integer>540</integer>
+			<integer>470</integer>
 		</dict>
 		<key>64F95798-1C6A-406F-B093-61F38A61C921</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>690</integer>
 			<key>ypos</key>
-			<integer>380</integer>
+			<integer>310</integer>
 		</dict>
 		<key>676982B8-FA60-4BF1-8C68-7597B85D3CAD</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>690</integer>
 			<key>ypos</key>
-			<integer>540</integer>
+			<integer>470</integer>
+		</dict>
+		<key>7C1007D8-A2D9-4279-95B4-EE402B15FFA8</key>
+		<dict>
+			<key>xpos</key>
+			<integer>170</integer>
+			<key>ypos</key>
+			<integer>610</integer>
 		</dict>
 		<key>832E044E-2535-4492-92A7-B3DF1977C010</key>
 		<dict>
 			<key>xpos</key>
-			<integer>350</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>380</integer>
+			<integer>310</integer>
 		</dict>
 		<key>8894ED17-402E-462C-A2FC-353349B23EF2</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>170</integer>
 			<key>ypos</key>
-			<integer>100</integer>
+			<integer>30</integer>
+		</dict>
+		<key>8D248992-7259-41D9-AB72-32779A35B4C7</key>
+		<dict>
+			<key>xpos</key>
+			<integer>420</integer>
+			<key>ypos</key>
+			<integer>610</integer>
 		</dict>
 		<key>8D750A29-D975-433D-AE64-5A70ADD8E1EC</key>
 		<dict>
 			<key>xpos</key>
-			<integer>620</integer>
+			<integer>690</integer>
 			<key>ypos</key>
-			<integer>100</integer>
+			<integer>30</integer>
 		</dict>
 		<key>923C746F-499B-47EC-A862-4FBC6F15FE25</key>
 		<dict>
 			<key>xpos</key>
-			<integer>350</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>170</integer>
 		</dict>
 		<key>B353646A-0296-493D-860A-6FD8C74DAE9C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>170</integer>
 			<key>ypos</key>
-			<integer>380</integer>
+			<integer>310</integer>
+		</dict>
+		<key>B3D0E072-E12D-41CA-9571-A3D803FEA459</key>
+		<dict>
+			<key>xpos</key>
+			<integer>690</integer>
+			<key>ypos</key>
+			<integer>610</integer>
 		</dict>
 		<key>C297EEAE-42D1-4223-BAA3-529903988A1E</key>
 		<dict>
 			<key>xpos</key>
-			<integer>350</integer>
+			<integer>420</integer>
 			<key>ypos</key>
-			<integer>100</integer>
+			<integer>30</integer>
 		</dict>
 		<key>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</key>
 		<dict>
 			<key>xpos</key>
-			<integer>100</integer>
+			<integer>170</integer>
 			<key>ypos</key>
-			<integer>240</integer>
+			<integer>170</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>

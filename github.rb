@@ -10,6 +10,7 @@ class Github
     @token_file = '.auth_token'
     @base_uri = 'https://api.github.com'
     @cache_file = '.repositoriescache'
+    @issue_cache_file = '.issuescache'
     @current_repo_file = '.currentrepo'
   end
 
@@ -39,9 +40,17 @@ class Github
     results.uniq
   end
 
+  def search_issue(query)
+    issues = load_and_cache_user_issues
+    results = issues.select do |issue|
+      issue['name'] =~ Regexp.new(query, 'i')
+    end
+    results += search_all_issues(query) if query =~ %r{\/}
+    results.uniq
+  end
+
   def load_token
     @token = File.read(@token_file).strip if File.exists?(@token_file)
-    puts @token
   end
 
   def load_current_repo
@@ -68,6 +77,25 @@ class Github
     end
 
     repos
+  end
+
+  def load_and_cache_user_issues
+    if File.exists?(@issue_cache_file)
+      JSON.parse(File.read(@issue_cache_file))
+    else
+      cache_all_issues_for_repo
+    end
+  end
+
+  def cache_all_issues_for_repo
+    raise InvalidToken unless test_authentication
+    issues = []
+    issues += get_repo_issues
+    File.open(@issue_cache_file, 'w') do |f|
+      f.write issues.to_json
+    end
+
+    issues
   end
 
   def create(query)
@@ -99,11 +127,27 @@ class Github
     cache_all_repos_for_user
   end
 
+  def rebuild_user_issues_cache
+    File.delete(@issue_cache_file) if File.exists?(@issue_cache_file)
+    cache_all_issues_for_repo
+  end
+
   def get_user_repos
     res = get '/user/repos'
     if res.is_a?(Array)
       res.map do |repo|
-        { 'name' => repo['full_name'], 'url' => repo['html_url'] }
+        { 'name' => repo['full_fname'], 'url' => repo['html_url'] }
+      end
+    else
+      []
+    end
+  end
+
+  def get_repo_issues
+    res = get "/repos/#{load_current_repo}/issues"
+    if res.is_a?(Array)
+      res.map do |issue|
+        { 'name' => issue['title'], 'url' => issue['html_url'] }
       end
     else
       []
@@ -168,6 +212,53 @@ class Github
     end
   end
 
+  def get_org_issues(org)
+    res = get "/orgs/#{load_current_repo}/issues"
+    if res.is_a?(Array)
+      res.map do |repo|
+        { 'name' => repo['title'], 'url' => repo['html_url'] }
+      end
+    else
+      []
+    end
+  end
+
+  def search_all_issues(query)
+    return [] if !query || query.length == 0
+    raise InvalidToken unless test_authentication
+
+    parts = query.split('/', 2)
+
+    if parts.length == 1 and parts[0].length > 0
+      res = get "/orgs/#{load_current_repo}/issues", { 'q' => query }
+
+      if res.is_a?(Hash) and res.has_key?('items')
+        res['items'].map do |issue|
+          { 'name' => issue['title'], 'url' => issue['html_url'] }
+        end
+      else
+        []
+      end
+    elsif parts.length == 2 and parts[0].length > 0
+      user = parts[0]
+      user_query = parts[1]
+      res = get "/users/#{load_current_repo}/issues"
+
+      if res.is_a?(Array)
+        repos = res.select do |repo|
+          repo['name'] =~ Regexp.new(user_query, 'i')
+        end
+        repos.map do |issue|
+          { 'name' => issue['title'], 'url' => issue['html_url'] }
+        end
+      else
+        []
+      end
+    else
+      []
+    end
+  end
+
   def get(path, params = {})
     params['per_page'] = 100
     qs = params.map { |k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}" }.join('&')
@@ -204,7 +295,10 @@ query = ARGV[0]
 github = Github.new
 
 begin
-  if query == '--auth'
+  if query == '--update'
+    github.rebuild_user_repos_cache
+    github.rebuild_user_issues_cache
+  elsif query == '--auth'
     github.store_token(ARGV[1])
   elsif query == '--repo'
     github.store_current_repo(ARGV[1])
@@ -213,13 +307,30 @@ begin
     result = github.load_current_repo
 
     puts "#{result} #{ARGV[1].tr('\\', ' ')}"
-  elsif query == '--search'
+  elsif query == '--searchrepos'
     results = github.search_repo(ARGV[1] || '')
     output = XmlBuilder.build do |xml|
       xml.items do
         if results.length > 0
           results.each do |repo|
             xml.item Item.new(repo['url'], repo['name'], repo['name'], repo['url'], 'yes')
+          end
+        else
+          xml.item Item.new(
+            nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+          )
+        end
+      end
+    end
+
+    puts output
+  elsif query == '--searchissues'
+    results = github.search_issue(ARGV[1] || '')
+    output = XmlBuilder.build do |xml|
+      xml.items do
+        if results.length > 0
+          results.each do |repo|
+            xml.item Item.new(repo['url'], repo['url'], repo['name'], repo['url'], 'yes')
           end
         else
           xml.item Item.new(
