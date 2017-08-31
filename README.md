@@ -32,13 +32,20 @@ gh-auth 取得したtoken
 repo issueを作りたいRepository
 ```
 
-![select your repo](images/select_repo.png)
+![select your repo](images/select_repo.jpg)
 
 ## issue検索
 ```
 issue 名前
 ```
 ![search issue](images/search_issue.png)
+
+## closed issue検索
+```
+close-issue 名前
+```
+
+![search issue](images/search_closed_issue.png)
 
 ## issue作成
 
@@ -61,7 +68,12 @@ update-cache
 ![update cache](images/update_cache.png)
 
 ***
-
+### 参考リンク
+- Github API: https://developer.github.com/v3/issues/
+- Alfred.GithubRepos: https://github.com/edgarjs/alfred-github-repos
+- Ruby HTTP 通信: https://docs.ruby-lang.org/ja/latest/library/net=2fhttp.html
+- HTTP context type: https://altarf.net/computer/ruby/2890
+***
 ### 開発
 
 1. 修正

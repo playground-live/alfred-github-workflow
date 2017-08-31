@@ -4,8 +4,6 @@
 <dict>
 	<key>bundleid</key>
 	<string>com.issue.create.test</string>
-	<key>category</key>
-	<string>Productivity</string>
 	<key>connections</key>
 	<dict>
 		<key>56F705A0-0D81-48D4-9119-2B416CA24402</key>
@@ -78,6 +76,19 @@
 			<dict>
 				<key>destinationuid</key>
 				<string>B3D0E072-E12D-41CA-9571-A3D803FEA459</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
+		<key>8F05C918-4702-434F-AE39-BDA8A58820D8</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>B7D2015A-239A-4EEB-B62C-7AEC1161E306</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -227,6 +238,88 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 			<string>8D750A29-D975-433D-AE64-5A70ADD8E1EC</string>
 			<key>version</key>
 			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>1</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>close-issue</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string>Fetching repositories from github...</string>
+				<key>script</key>
+				<string>ruby github.rb --searchcloseissue "{query}"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string>Search your github closed issues for '{query}'</string>
+				<key>title</key>
+				<string>search your closed issue</string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>8F05C918-4702-434F-AE39-BDA8A58820D8</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>concurrently</key>
+				<false/>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>script</key>
+				<string>qry="{query}"
+
+case "$qry" in
+  https://*) # repo selected, open in browser
+	open "$qry"
+	;;
+  gh-auth*) # switch to gh-auth
+	osascript -e 'tell Application "Alfred 2" to search "'"$qry"'"'
+	;;
+  *) # rebuild cache, then repeat search
+	ruby github.rb --update &amp;&amp;
+    osascript -e 'tell application "Alfred 2" to run trigger "report-update-complete" in workflow "sh.edgar.alfred.GithubRepos"' &amp;&amp;
+	osascript -e 'tell Application "Alfred 2" to search "gh '"$qry"'"'
+	;;
+esac</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.action.script</string>
+			<key>uid</key>
+			<string>B7D2015A-239A-4EEB-B62C-7AEC1161E306</string>
+			<key>version</key>
+			<integer>2</integer>
 		</dict>
 		<dict>
 			<key>config</key>
@@ -608,10 +701,17 @@ fi</string>
 			<key>ypos</key>
 			<integer>30</integer>
 		</dict>
-		<key>923C746F-499B-47EC-A862-4FBC6F15FE25</key>
+		<key>8F05C918-4702-434F-AE39-BDA8A58820D8</key>
 		<dict>
 			<key>xpos</key>
 			<integer>420</integer>
+			<key>ypos</key>
+			<integer>170</integer>
+		</dict>
+		<key>923C746F-499B-47EC-A862-4FBC6F15FE25</key>
+		<dict>
+			<key>xpos</key>
+			<integer>260</integer>
 			<key>ypos</key>
 			<integer>170</integer>
 		</dict>
@@ -629,6 +729,13 @@ fi</string>
 			<key>ypos</key>
 			<integer>460</integer>
 		</dict>
+		<key>B7D2015A-239A-4EEB-B62C-7AEC1161E306</key>
+		<dict>
+			<key>xpos</key>
+			<integer>690</integer>
+			<key>ypos</key>
+			<integer>170</integer>
+		</dict>
 		<key>C297EEAE-42D1-4223-BAA3-529903988A1E</key>
 		<dict>
 			<key>xpos</key>
@@ -639,7 +746,7 @@ fi</string>
 		<key>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</key>
 		<dict>
 			<key>xpos</key>
-			<integer>170</integer>
+			<integer>70</integer>
 			<key>ypos</key>
 			<integer>170</integer>
 		</dict>

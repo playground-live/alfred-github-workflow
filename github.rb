@@ -5,6 +5,7 @@ require 'cgi'
 
 class InvalidToken < StandardError; end
 
+# method with github
 class Github
   def initialize
     @token_file = '.auth_token'
@@ -15,6 +16,7 @@ class Github
     @close_issue_cache_file = '.closeissuescache'
   end
 
+  # stor the token write in @token_file
   def store_token(token)
     if token && token.length > 0
       File.open(@token_file, 'w') do |f|
@@ -24,6 +26,7 @@ class Github
     end
   end
 
+  # store current_repo write in @current_repo_file
   def store_current_repo(repo)
     if repo && repo.length > 0
       File.open(@current_repo_file, 'w') do |f|
@@ -32,6 +35,7 @@ class Github
     end
   end
 
+  # search repo from repositories cache file and github
   def search_repo(query)
     repos = load_and_cache_user_repos
     results = repos.select do |repo|
@@ -41,6 +45,7 @@ class Github
     results.uniq
   end
 
+  # search issue from repositories cache file and github
   def search_issue(query)
     issues = load_and_cache_user_issues
     results = issues.select do |issue|
@@ -50,6 +55,7 @@ class Github
     results.uniq
   end
 
+  # search closed issue from repositories cache file and github
   def search_close_issue(query)
     issues = load_and_cache_user_close_issues
     results = issues.select do |issue|
@@ -59,14 +65,17 @@ class Github
     results.uniq
   end
 
+  # get token which store in token file
   def load_token
     @token = File.read(@token_file).strip if File.exists?(@token_file)
   end
 
+  # get current repositories in current repositories file
   def load_current_repo
     @current_repo = File.read(@current_repo_file) if File.exists?(@current_repo_file)
   end
 
+  # get all repositories in cache file
   def load_and_cache_user_repos
     if File.exists?(@cache_file)
       JSON.parse(File.read(@cache_file))
@@ -75,6 +84,7 @@ class Github
     end
   end
 
+  # put all repositorise data to cache file
   def cache_all_repos_for_user
     raise InvalidToken unless test_authentication
     repos = []
@@ -89,6 +99,7 @@ class Github
     repos
   end
 
+  # get all issues data to cache file
   def load_and_cache_user_issues
     if File.exists?(@issue_cache_file)
       JSON.parse(File.read(@issue_cache_file))
@@ -97,14 +108,7 @@ class Github
     end
   end
 
-  def load_and_cache_user_close_issues
-    if File.exists?(@close_issue_cache_file)
-      JSON.parse(File.read(@close_issue_cache_file))
-    else
-      cache_all_close_issues_for_repo
-    end
-  end
-
+  # put all issues data to cache file
   def cache_all_issues_for_repo
     raise InvalidToken unless test_authentication
     issues = []
@@ -116,6 +120,16 @@ class Github
     issues
   end
 
+  # get all closed issues data to cache file
+  def load_and_cache_user_close_issues
+    if File.exists?(@close_issue_cache_file)
+      JSON.parse(File.read(@close_issue_cache_file))
+    else
+      cache_all_close_issues_for_repo
+    end
+  end
+
+  # put all closed issues data to cache file
   def cache_all_close_issues_for_repo
     raise InvalidToken unless test_authentication
     issues = []
@@ -127,6 +141,7 @@ class Github
     issues
   end
 
+  # create a issue in current repositories
   def create(query)
     load_token
     load_current_repo
@@ -144,6 +159,7 @@ class Github
     puts response.code
   end
 
+  # test the auth token
   def test_authentication
     load_token
     return false if !@token || @token.length == 0
@@ -151,21 +167,25 @@ class Github
     !res.has_key?('error')
   end
 
+  # upadate all repositoriese cache
   def rebuild_user_repos_cache
     File.delete(@cache_file) if File.exists?(@cache_file)
     cache_all_repos_for_user
   end
 
+  # upadate all issues cache of current repo
   def rebuild_user_issues_cache
     File.delete(@issue_cache_file) if File.exists?(@issue_cache_file)
     cache_all_issues_for_repo
   end
 
+  # upadate all closed issues cache of current repo
   def rebuild_user_close_issues_cache
     File.delete(@close_issue_cache_file) if File.exists?(@close_issue_cache_file)
     cache_all_close_issues_for_repo
   end
 
+  # communicate with github to get repositories of user
   def get_user_repos
     res = get '/user/repos'
     if res.is_a?(Array)
@@ -177,6 +197,7 @@ class Github
     end
   end
 
+  # communicate with github to get issues of user
   def get_repo_issues
     res = get "/repos/#{load_current_repo}/issues"
     if res.is_a?(Array)
@@ -188,8 +209,10 @@ class Github
     end
   end
 
+  # communicate with github to get closed issues of user
   def get_repo_close_issues
-    res = get "/repos/#{load_current_repo}/issues", { 'state' => 'closed' }
+    #'state' => 'closed' is the parameters of 'get'  default is 'opend'
+    res = get "/repos/#{load_current_repo}/issues", { 'state' => 'closed'}
     if res.is_a?(Array)
       res.map do |issue|
         { 'name' => issue['title'], 'url' => issue['html_url'] }
@@ -199,6 +222,7 @@ class Github
     end
   end
 
+  # communicate with github to get login of organization
   def get_user_orgs
     res = get '/user/orgs'
     if res.is_a?(Array)
@@ -210,6 +234,7 @@ class Github
     end
   end
 
+  # communicate with github to get repositories of organization
   def get_org_repos(org)
     res = get "/orgs/#{org}/repos"
     if res.is_a?(Array)
@@ -221,6 +246,7 @@ class Github
     end
   end
 
+  # search all repositories in github
   def search_all_repos(query)
     return [] if !query || query.length == 0
     raise InvalidToken unless test_authentication
@@ -257,28 +283,7 @@ class Github
     end
   end
 
-  def get_org_issues(org)
-    res = get "/orgs/#{load_current_repo}/issues"
-    if res.is_a?(Array)
-      res.map do |repo|
-        { 'name' => repo['title'], 'url' => repo['html_url'] }
-      end
-    else
-      []
-    end
-  end
-
-  def get_org_close_issues(org)
-    res = get "/orgs/#{load_current_repo}/issues?q=is%3Aclosed"
-    if res.is_a?(Array)
-      res.map do |repo|
-        { 'name' => repo['title'], 'url' => repo['html_url'] }
-      end
-    else
-      []
-    end
-  end
-
+  # search all issues in github
   def search_all_issues(query)
     return [] if !query || query.length == 0
     raise InvalidToken unless test_authentication
@@ -315,6 +320,7 @@ class Github
     end
   end
 
+  # search all closed issues in github
   def search_all_close_issues(query)
     return [] if !query || query.length == 0
     raise InvalidToken unless test_authentication
@@ -351,11 +357,12 @@ class Github
     end
   end
 
+  # communicate with github by get
   def get(path, params = {})
     params['per_page'] = 100
     qs = params.map { |k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}" }.join('&')
     uri = URI("#{@base_uri}#{path}?#{qs}")
-    puts uri
+
     json_all = []
 
     begin
@@ -384,8 +391,8 @@ class Github
   end
 end
 
-#########################################################################################
-#########################################################################################
+########################################################################
+########################################################################
 
 query = ARGV[0]
 github = Github.new
@@ -429,7 +436,7 @@ begin
       xml.items do
         if results.length > 0
           results.each do |repo|
-            xml.item Item.new(repo['url'], repo['url'], repo['name'], repo['url'], 'yes')
+            xml.item Item.new(repo['url'], repo['url'], repo['name'.gsub('<',' ')], repo['url'], 'yes')
           end
         else
           xml.item Item.new(
