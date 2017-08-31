@@ -22,8 +22,8 @@ class XmlBuilder
   def item(item)
     @output << <<-eos
       <item uid="#{item.uid}" arg="#{item.arg}" valid="#{item.valid}">
-        <title>#{item.title}</title>
-        <subtitle>#{item.subtitle}</subtitle>
+        <title>#{item.title.encode(xml: :text)}</title>
+        <subtitle>#{item.subtitle.encode(xml: :text)}</subtitle>
         <icon>#{item.icon}</icon>
       </item>
     eos
