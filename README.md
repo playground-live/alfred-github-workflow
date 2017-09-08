@@ -4,79 +4,73 @@
 
 # 使い方
 
-ダウンロードしてください
-
-<a href="./Create issue.alfredworkflow?raw=true">ダウンロード</a>
+releaseからダウンロードしてください
 
 ## 認証
 ```
-gh-auth
+gi-auth
 ```
-
+スペースを開けずにEnterを押すと、Githubのaccesstoken発行ページに遷移します
 ![open github page](images/open_auth.png)
 
-repo権限のみをつけたtokenを発行して、取得したtokenをコピーする
+repo権限をつけたtokenを発行して、取得したtokenをコピーしてください
 
 ![get auth token](images/get_token.png)
 
 ```
-gh-auth 取得したtoken
+gi-auth 取得したtoken
 ```
-
-![register your auth token](images/input_access_token.png)
+取得したtokenを入力してください
+![register your auth token](images/gi-auth.png)
 
 ## Repositoryを登録
 
 どのRepositoryにIssueを作るか登録します
 ```
-repo issueを作りたいRepository
+gi-repo issueを作りたいRepository
 ```
 
-![select your repo](images/select_repo.jpg)
+![select your repo](images/gi-repo.png)
 
 ## issue検索
+openになっているIssueを検索
 ```
-issue 名前
+gi 名前
 ```
-![search issue](images/search_issue.png)
+![search issue](images/gi.png)
 
-## closed issue検索
+## closeのIssueも検索
+closeのIssueを含めて全て検索
 ```
-close-issue 名前
+gi-all 名前
 ```
 
-![search issue](images/search_closed_issue.png)
+![search issue](images/gi-all.png)
 
 ## issue作成
 
 ```
-create-issue issueの名前
+gi-create issueの名前
 ```
 
-![create issue](images/create_issue.png)
+![create issue](images/gi-create.png)
 
 issueが作成できました
 
-![issue page](images/github_issue.png)
+![issue page](images/created_issue.png)
 
 ## cacheのupdate
-
+cacheがうまく更新されない場合、updateすることができます
 ```
-update-cache
+gi-update
 ```
 
-![update cache](images/update_cache.png)
+![update cache](images/gi-update.png)
 
 ***
+
 ### 参考リンク
 - Github API: https://developer.github.com/v3/issues/
 - Alfred.GithubRepos: https://github.com/edgarjs/alfred-github-repos
 - Ruby HTTP 通信: https://docs.ruby-lang.org/ja/latest/library/net=2fhttp.html
 - HTTP context type: https://altarf.net/computer/ruby/2890
-***
-### 開発
-
-1. 修正
-1. alfredでexport
-1. exportしてできた.alfredworkflowファイルをこのディレクトリに移動(上書き)
-1. push
