@@ -58,11 +58,11 @@
 				<false/>
 			</dict>
 		</array>
-		<key>8894ED17-402E-462C-A2FC-353349B23EF2</key>
+		<key>8B76BA2F-1716-4721-9A66-2710E455BA52</key>
 		<array>
 			<dict>
 				<key>destinationuid</key>
-				<string>C297EEAE-42D1-4223-BAA3-529903988A1E</string>
+				<string>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</string>
 				<key>modifiers</key>
 				<integer>0</integer>
 				<key>modifiersubtext</key>
@@ -123,6 +123,19 @@
 				<false/>
 			</dict>
 		</array>
+		<key>D3D0465D-0EEC-48E5-B584-7F9C182CA60E</key>
+		<array>
+			<dict>
+				<key>destinationuid</key>
+				<string>C297EEAE-42D1-4223-BAA3-529903988A1E</string>
+				<key>modifiers</key>
+				<integer>0</integer>
+				<key>modifiersubtext</key>
+				<string></string>
+				<key>vitoclose</key>
+				<false/>
+			</dict>
+		</array>
 		<key>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</key>
 		<array>
 			<dict>
@@ -158,7 +171,9 @@
 				<string>qry="{query}"
 qry="${qry// /}"
 
-ruby github.rb --create "$qry" &gt;/dev/null</string>
+ruby github.rb
+result=`ruby github.rb --create "$qry"`
+open "$result"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -176,51 +191,6 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 		<dict>
 			<key>config</key>
 			<dict>
-				<key>alfredfiltersresults</key>
-				<false/>
-				<key>argumenttrimmode</key>
-				<integer>0</integer>
-				<key>argumenttype</key>
-				<integer>1</integer>
-				<key>escaping</key>
-				<integer>5</integer>
-				<key>keyword</key>
-				<string>create-issue</string>
-				<key>queuedelaycustom</key>
-				<integer>3</integer>
-				<key>queuedelayimmediatelyinitially</key>
-				<true/>
-				<key>queuedelaymode</key>
-				<integer>0</integer>
-				<key>queuemode</key>
-				<integer>1</integer>
-				<key>runningsubtext</key>
-				<string></string>
-				<key>script</key>
-				<string>ruby github.rb "{query}"</string>
-				<key>scriptargtype</key>
-				<integer>0</integer>
-				<key>scriptfile</key>
-				<string></string>
-				<key>subtext</key>
-				<string>input issue title</string>
-				<key>title</key>
-				<string>create issue</string>
-				<key>type</key>
-				<integer>0</integer>
-				<key>withspace</key>
-				<true/>
-			</dict>
-			<key>type</key>
-			<string>alfred.workflow.input.scriptfilter</string>
-			<key>uid</key>
-			<string>8894ED17-402E-462C-A2FC-353349B23EF2</string>
-			<key>version</key>
-			<integer>2</integer>
-		</dict>
-		<dict>
-			<key>config</key>
-			<dict>
 				<key>lastpathcomponent</key>
 				<false/>
 				<key>onlyshowifquerypopulated</key>
@@ -230,12 +200,33 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>text</key>
 				<string></string>
 				<key>title</key>
-				<string>Issue has been created!</string>
+				<string>issue has been created</string>
 			</dict>
 			<key>type</key>
 			<string>alfred.workflow.output.notification</string>
 			<key>uid</key>
 			<string>8D750A29-D975-433D-AE64-5A70ADD8E1EC</string>
+			<key>version</key>
+			<integer>1</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>keyword</key>
+				<string>gi-create</string>
+				<key>subtext</key>
+				<string>input issue title</string>
+				<key>text</key>
+				<string>create issue</string>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.keyword</string>
+			<key>uid</key>
+			<string>D3D0465D-0EEC-48E5-B584-7F9C182CA60E</string>
 			<key>version</key>
 			<integer>1</integer>
 		</dict>
@@ -251,7 +242,7 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>escaping</key>
 				<integer>102</integer>
 				<key>keyword</key>
-				<string>close-issue</string>
+				<string>gi-all</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -263,7 +254,7 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>runningsubtext</key>
 				<string>Fetching repositories from github...</string>
 				<key>script</key>
-				<string>ruby github.rb --searchcloseissue "{query}"</string>
+				<string>ruby github.rb --searchallissue "{query}"</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -271,7 +262,7 @@ ruby github.rb --create "$qry" &gt;/dev/null</string>
 				<key>subtext</key>
 				<string>Search your github closed issues for '{query}'</string>
 				<key>title</key>
-				<string>search your closed issue</string>
+				<string>search All issue in current repo</string>
 				<key>type</key>
 				<integer>0</integer>
 				<key>withspace</key>
@@ -370,7 +361,7 @@ esac</string>
 				<key>escaping</key>
 				<integer>63</integer>
 				<key>keyword</key>
-				<string>issue</string>
+				<string>gi</string>
 				<key>queuedelaycustom</key>
 				<integer>1</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -382,7 +373,8 @@ esac</string>
 				<key>runningsubtext</key>
 				<string>Fetching repositories from github...</string>
 				<key>script</key>
-				<string>ruby github.rb --searchissues "{query}"</string>
+				<string>ruby github.rb --searchissues "{query}"
+</string>
 				<key>scriptargtype</key>
 				<integer>0</integer>
 				<key>scriptfile</key>
@@ -400,6 +392,51 @@ esac</string>
 			<string>alfred.workflow.input.scriptfilter</string>
 			<key>uid</key>
 			<string>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</string>
+			<key>version</key>
+			<integer>2</integer>
+		</dict>
+		<dict>
+			<key>config</key>
+			<dict>
+				<key>alfredfiltersresults</key>
+				<false/>
+				<key>argumenttrimmode</key>
+				<integer>0</integer>
+				<key>argumenttype</key>
+				<integer>0</integer>
+				<key>escaping</key>
+				<integer>102</integer>
+				<key>keyword</key>
+				<string>gi</string>
+				<key>queuedelaycustom</key>
+				<integer>3</integer>
+				<key>queuedelayimmediatelyinitially</key>
+				<true/>
+				<key>queuedelaymode</key>
+				<integer>0</integer>
+				<key>queuemode</key>
+				<integer>1</integer>
+				<key>runningsubtext</key>
+				<string></string>
+				<key>script</key>
+				<string>ruby github.rb --updateissues "query"</string>
+				<key>scriptargtype</key>
+				<integer>0</integer>
+				<key>scriptfile</key>
+				<string></string>
+				<key>subtext</key>
+				<string></string>
+				<key>title</key>
+				<string></string>
+				<key>type</key>
+				<integer>0</integer>
+				<key>withspace</key>
+				<true/>
+			</dict>
+			<key>type</key>
+			<string>alfred.workflow.input.scriptfilter</string>
+			<key>uid</key>
+			<string>8B76BA2F-1716-4721-9A66-2710E455BA52</string>
 			<key>version</key>
 			<integer>2</integer>
 		</dict>
@@ -462,7 +499,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>escaping</key>
 				<integer>5</integer>
 				<key>keyword</key>
-				<string>repo</string>
+				<string>gi-repo</string>
 				<key>queuedelaycustom</key>
 				<integer>3</integer>
 				<key>queuedelayimmediatelyinitially</key>
@@ -472,7 +509,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>queuemode</key>
 				<integer>1</integer>
 				<key>runningsubtext</key>
-				<string></string>
+				<string>Fetching repositories from github...</string>
 				<key>script</key>
 				<string>ruby github.rb --searchrepos "{query}"</string>
 				<key>scriptargtype</key>
@@ -480,7 +517,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>scriptfile</key>
 				<string></string>
 				<key>subtext</key>
-				<string>issue-create</string>
+				<string>choose repo where your issue want to create</string>
 				<key>title</key>
 				<string>Change repo</string>
 				<key>type</key>
@@ -524,7 +561,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>argumenttype</key>
 				<integer>2</integer>
 				<key>keyword</key>
-				<string>update-cache</string>
+				<string>gi-update</string>
 				<key>subtext</key>
 				<string>Rebuilds your local cache from GitHub</string>
 				<key>text</key>
@@ -587,7 +624,7 @@ ruby github.rb --repo "$qry" &gt;/dev/null</string>
 				<key>argumenttype</key>
 				<integer>1</integer>
 				<key>keyword</key>
-				<string>gh-auth</string>
+				<string>gi-auth</string>
 				<key>subtext</key>
 				<string>Just ↩ to go to https://github.com/settings/tokens/new now to create a token with scope 'repo'.</string>
 				<key>text</key>
@@ -641,117 +678,124 @@ fi</string>
 		<key>56F705A0-0D81-48D4-9119-2B416CA24402</key>
 		<dict>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>340</integer>
 			<key>ypos</key>
-			<integer>600</integer>
+			<integer>580</integer>
 		</dict>
 		<key>5B8E9CAF-BBDC-4A68-B900-5815BDB673C0</key>
 		<dict>
 			<key>xpos</key>
-			<integer>170</integer>
+			<integer>40</integer>
 			<key>ypos</key>
-			<integer>600</integer>
+			<integer>580</integer>
 		</dict>
 		<key>64F95798-1C6A-406F-B093-61F38A61C921</key>
 		<dict>
 			<key>xpos</key>
-			<integer>690</integer>
+			<integer>670</integer>
 			<key>ypos</key>
-			<integer>310</integer>
+			<integer>300</integer>
 		</dict>
 		<key>676982B8-FA60-4BF1-8C68-7597B85D3CAD</key>
 		<dict>
 			<key>xpos</key>
-			<integer>690</integer>
+			<integer>680</integer>
 			<key>ypos</key>
-			<integer>600</integer>
+			<integer>580</integer>
 		</dict>
 		<key>7C1007D8-A2D9-4279-95B4-EE402B15FFA8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>170</integer>
+			<integer>40</integer>
 			<key>ypos</key>
-			<integer>460</integer>
+			<integer>440</integer>
 		</dict>
 		<key>832E044E-2535-4492-92A7-B3DF1977C010</key>
 		<dict>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>340</integer>
 			<key>ypos</key>
-			<integer>310</integer>
+			<integer>300</integer>
 		</dict>
-		<key>8894ED17-402E-462C-A2FC-353349B23EF2</key>
+		<key>8B76BA2F-1716-4721-9A66-2710E455BA52</key>
 		<dict>
 			<key>xpos</key>
-			<integer>170</integer>
+			<integer>10</integer>
 			<key>ypos</key>
-			<integer>30</integer>
+			<integer>160</integer>
 		</dict>
 		<key>8D248992-7259-41D9-AB72-32779A35B4C7</key>
 		<dict>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>340</integer>
 			<key>ypos</key>
-			<integer>460</integer>
+			<integer>440</integer>
 		</dict>
 		<key>8D750A29-D975-433D-AE64-5A70ADD8E1EC</key>
 		<dict>
 			<key>xpos</key>
-			<integer>690</integer>
+			<integer>640</integer>
 			<key>ypos</key>
 			<integer>30</integer>
 		</dict>
 		<key>8F05C918-4702-434F-AE39-BDA8A58820D8</key>
 		<dict>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>500</integer>
 			<key>ypos</key>
-			<integer>170</integer>
+			<integer>160</integer>
 		</dict>
 		<key>923C746F-499B-47EC-A862-4FBC6F15FE25</key>
 		<dict>
 			<key>xpos</key>
-			<integer>260</integer>
+			<integer>360</integer>
 			<key>ypos</key>
-			<integer>170</integer>
+			<integer>160</integer>
 		</dict>
 		<key>B353646A-0296-493D-860A-6FD8C74DAE9C</key>
 		<dict>
 			<key>xpos</key>
-			<integer>170</integer>
+			<integer>40</integer>
 			<key>ypos</key>
-			<integer>310</integer>
+			<integer>300</integer>
 		</dict>
 		<key>B3D0E072-E12D-41CA-9571-A3D803FEA459</key>
 		<dict>
 			<key>xpos</key>
-			<integer>690</integer>
+			<integer>680</integer>
 			<key>ypos</key>
-			<integer>460</integer>
+			<integer>440</integer>
 		</dict>
 		<key>B7D2015A-239A-4EEB-B62C-7AEC1161E306</key>
 		<dict>
 			<key>xpos</key>
-			<integer>690</integer>
+			<integer>670</integer>
 			<key>ypos</key>
-			<integer>170</integer>
+			<integer>160</integer>
 		</dict>
 		<key>C297EEAE-42D1-4223-BAA3-529903988A1E</key>
 		<dict>
 			<key>xpos</key>
-			<integer>420</integer>
+			<integer>440</integer>
+			<key>ypos</key>
+			<integer>30</integer>
+		</dict>
+		<key>D3D0465D-0EEC-48E5-B584-7F9C182CA60E</key>
+		<dict>
+			<key>xpos</key>
+			<integer>210</integer>
 			<key>ypos</key>
 			<integer>30</integer>
 		</dict>
 		<key>E5E24775-3C8B-4B7B-9C08-3F86F93FF962</key>
 		<dict>
 			<key>xpos</key>
-			<integer>70</integer>
+			<integer>190</integer>
 			<key>ypos</key>
-			<integer>170</integer>
+			<integer>160</integer>
 		</dict>
 	</dict>
 	<key>webaddress</key>
-	<string></string>
+	<string>https://github.com/playground-live/alfred-github-workflow</string>
 </dict>
 </plist>

@@ -72,6 +72,7 @@ class Github
 
   # get current repositories in current repositories file
   def load_current_repo
+    raise InvalidToken unless test_authentication
     @current_repo = File.read(@current_repo_file) if File.exists?(@current_repo_file)
   end
 
@@ -143,6 +144,7 @@ class Github
 
   # create a issue in current repositories
   def create(query)
+    raise InvalidToken unless test_authentication
     load_token
     load_current_repo
     uri = URI.parse("https://api.github.com/repos/#{@current_repo}/issues?access_token=#{@token}")
@@ -155,8 +157,8 @@ class Github
 
     response = http.request(request)
 
-    puts response.message
-    puts response.code
+    url = response.body
+    JSON.parse(url)["html_url"]
   end
 
   # test the auth token
@@ -215,7 +217,7 @@ class Github
     res = get "/repos/#{load_current_repo}/issues", { 'state' => 'closed'}
     if res.is_a?(Array)
       res.map do |issue|
-        { 'name' => issue['title'], 'url' => issue['html_url'] }
+        { 'name' => "#{issue['title']}[closed]", 'url' => issue['html_url'] }
       end
     else
       []
@@ -332,7 +334,7 @@ class Github
 
       if res.is_a?(Hash) and res.has_key?('items')
         res['items'].map do |issue|
-          { 'name' => issue['title'], 'url' => issue['html_url'] }
+          { 'name' => "#{issue['title']}[closed]", 'url' => issue['html_url'] }
         end
       else
         []
@@ -347,9 +349,9 @@ class Github
           repo['name'] =~ Regexp.new(user_query, 'i')
         end
         repos.map do |issue|
-          { 'name' => issue['title'], 'url' => issue['html_url'] }
+          { 'name' => "#{issue['title']}[closed]", 'url' => issue['html_url'] }
         end
-      else
+      else˜
         []
       end
     else
@@ -362,7 +364,6 @@ class Github
     params['per_page'] = 100
     qs = params.map { |k, v| "#{CGI.escape k.to_s}=#{CGI.escape v.to_s}" }.join('&')
     uri = URI("#{@base_uri}#{path}?#{qs}")
-
     json_all = []
 
     begin
@@ -409,10 +410,11 @@ begin
     github.rebuild_user_issues_cache
     github.rebuild_user_close_issues_cache
   elsif query == '--create'
-    github.create(ARGV[1].tr('\\', ' '))
-    result = github.load_current_repo
-
-    puts "#{result} #{ARGV[1].tr('\\', ' ')}"
+    result = github.create(ARGV[1].tr('\\', ' '))
+    print result
+  elsif query == '--updateissues'
+    github.rebuild_user_issues_cache
+    github.rebuild_user_close_issues_cache
   elsif query == '--searchrepos'
     results = github.search_repo(ARGV[1] || '')
     output = XmlBuilder.build do |xml|
@@ -431,6 +433,10 @@ begin
 
     puts output
   elsif query == '--searchissues'
+    if ARGV[1] == ""
+      #github.rebuild_user_issues_cache
+      #github.rebuild_user_close_issues_cache
+    end
     results = github.search_issue(ARGV[1] || '')
     output = XmlBuilder.build do |xml|
       xml.items do
@@ -447,8 +453,9 @@ begin
     end
 
     puts output
-  elsif query == '--searchcloseissue'
+  elsif query == '--searchallissue'
     results = github.search_close_issue(ARGV[1] || '')
+    results += github.search_issue(ARGV[1] || '')
     output = XmlBuilder.build do |xml|
       xml.items do
         if results.length > 0
@@ -457,23 +464,22 @@ begin
           end
         else
           xml.item Item.new(
-            nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+            nil, query, 'the current repo is empty!', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
           )
         end
       end
     end
-
     puts output
   else
     result = github.load_current_repo
     output = XmlBuilder.build do |xml|
       xml.items do
-        if result.length > 0
-          xml.item Item.new(nil, query, 'create issue', result, 'yes')
-        else
+        if result.empty?
           xml.item Item.new(
-            nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+            nil, query, 'the current repo is empty!', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
           )
+        else
+          xml.item Item.new(nil, query, 'create issue', result, 'yes')
         end
       end
     end
