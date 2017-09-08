@@ -10,7 +10,7 @@ releaseからダウンロードしてください
 ```
 gi-auth
 ```
-スペースを開けずにEnterを押すと、Githubのaccesstoken発行ページに遷移します
+スペースを開けずにEnterを押すと、Githubのaccesstoken発行ページに遷移します
 ![open github page](images/open_auth.png)
 
 repo権限をつけたtokenを発行して、取得したtokenをコピーしてください
