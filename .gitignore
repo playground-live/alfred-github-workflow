@@ -1,4 +1,5 @@
 .auth_token
 .currentrepo
 .issuescache
+.allissuescache
 .repositoriescache

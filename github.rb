@@ -13,7 +13,7 @@ class Github
     @cache_file = '.repositoriescache'
     @issue_cache_file = '.issuescache'
     @current_repo_file = '.currentrepo'
-    @close_issue_cache_file = '.closeissuescache'
+    @all_issue_cache_file = '.allissuescache'
   end
 
   # stor the token write in @token_file
@@ -122,8 +122,8 @@ class Github
 
   # get all closed issues data to cache file
   def load_and_cache_user_close_issues
-    if File.exists?(@close_issue_cache_file)
-      JSON.parse(File.read(@close_issue_cache_file))
+    if File.exists?(@all_issue_cache_file)
+      JSON.parse(File.read(@all_issue_cache_file))
     else
       cache_all_close_issues_for_repo
     end
@@ -134,7 +134,7 @@ class Github
     raise InvalidToken unless test_authentication
     issues = []
     issues += get_repo_close_issues
-    File.open(@close_issue_cache_file, 'w') do |f|
+    File.open(@all_issue_cache_file, 'w') do |f|
       f.write issues.to_json
     end
 
@@ -181,7 +181,7 @@ class Github
 
   # upadate all closed issues cache of current repo
   def rebuild_user_close_issues_cache
-    File.delete(@close_issue_cache_file) if File.exists?(@close_issue_cache_file)
+    File.delete(@all_issue_cache_file) if File.exists?(@all_issue_cache_file)
     cache_all_close_issues_for_repo
   end
 
