@@ -1,27 +1,27 @@
 class Github
   module Cache
+    # update cache method
     module Update
       # upadate all repositoriese cache
       def rebuild_user_repos_cache
-        File.delete(@cache_file) if File.exists?(@cache_file)
+        File.delete(@cache_file) if File.exist?(@cache_file)
         cache_all_repos_for_user
       end
 
       # upadate all issues cache of current repo
       def rebuild_user_issues_cache
-        File.delete(@issue_cache_file) if File.exists?(@issue_cache_file)
+        File.delete(@issue_cache_file) if File.exist?(@issue_cache_file)
         cache_all_issues_for_repo
       end
 
       # upadate all closed issues cache of current repo
       def rebuild_user_close_issues_cache
-        File.delete(@all_issue_cache_file) if File.exists?(@all_issue_cache_file)
+        File.delete(@all_issue_cache_file) if File.exist?(@all_issue_cache_file)
         cache_all_close_issues_for_repo
       end
 
       # put all repositorise data to cache file
       def cache_all_repos_for_user
-        #raise InvalidToken unless test_authentication
         repos = []
         repos += get_user_repos
         get_user_orgs.each do |org|
@@ -72,7 +72,6 @@ class Github
 
       # put all issues data to cache file
       def cache_all_issues_for_repo
-        #raise InvalidToken unless test_authentication
         issues = []
         issues += get_repo_issues
         File.open(@issue_cache_file, 'w') do |f|
@@ -93,10 +92,9 @@ class Github
           []
         end
       end
-        
+
       # put all closed issues data to cache file
       def cache_all_close_issues_for_repo
-        #raise InvalidToken unless test_authentication
         issues = []
         issues += get_repo_close_issues
         File.open(@all_issue_cache_file, 'w') do |f|
@@ -108,8 +106,8 @@ class Github
 
       # communicate with github to get closed issues of user
       def get_repo_close_issues
-        #'state' => 'closed' is the parameters of 'get'  default is 'opend'
-        res = get "/repos/#{load_current_repo}/issues", { 'state' => 'closed'}
+        # 'state' => 'closed' is the parameters of 'get'  default is 'opend'
+        res = get "/repos/#{load_current_repo}/issues", 'state' => 'closed'
         if res.is_a?(Array)
           res.map do |issue|
             { 'name' => "#{issue['title']}[closed]", 'url' => issue['html_url'] }

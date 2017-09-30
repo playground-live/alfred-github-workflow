@@ -17,11 +17,11 @@ module Request
 
       json = JSON.parse(res.body)
 
-      return { 'error' => json['message'] } unless res.kind_of? Net::HTTPSuccess
+      return { 'error' => json['message'] } unless res.is_a? Net::HTTPSuccess
 
       if json.is_a?(Array)
         json_all.concat json
-        uri = URI((res['link'].match /<([^>]+)>;\s*rel="next"/ )[1]) rescue nil
+        uri = URI((res['link'].match /<([^>]+)>;\s*rel="next"/)[1])
         break if uri.nil?
       else
         json_all = json
@@ -31,7 +31,7 @@ module Request
     json_all
   end
 
-  def post(path,query)
+  def post(path, query)
     uri = URI.parse("#{@base_uri}#{path}")
     http = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true)
     http.verify_mode = OpenSSL::SSL::VERIFY_PEER

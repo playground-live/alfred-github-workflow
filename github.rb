@@ -65,8 +65,8 @@ class Github
   # test the auth token
   def test_authentication
     load_token
-    return false if !@token || @token.length == 0
-    res = get "/"
-    !res.has_key?('error')
+    return false if !@token || @token.empty?
+    res = get '/'
+    !res.key?('error')
   end
 end
