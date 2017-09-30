@@ -4,19 +4,19 @@ class Github
     module Update
       # upadate all repositoriese cache
       def rebuild_user_repos_cache
-        File.delete(@cache_file) if File.exist?(@cache_file)
+        File.delete(CACHE_FILE) if File.exist?(CACHE_FILE)
         cache_all_repos_for_user
       end
 
       # upadate all issues cache of current repo
       def rebuild_user_issues_cache
-        File.delete(@issue_cache_file) if File.exist?(@issue_cache_file)
+        File.delete(ISSUE_CACHE_FILE) if File.exist?(ISSUE_CACHE_FILE)
         cache_all_issues_for_repo
       end
 
       # upadate all closed issues cache of current repo
       def rebuild_user_close_issues_cache
-        File.delete(@all_issue_cache_file) if File.exist?(@all_issue_cache_file)
+        File.delete(ALL_ISSUE_CACHE_FILE) if File.exist?(ALL_ISSUE_CACHE_FILE)
         cache_all_close_issues_for_repo
       end
 
@@ -27,7 +27,7 @@ class Github
         get_user_orgs.each do |org|
           repos += get_org_repos(org['login'])
         end
-        File.open(@cache_file, 'w') do |f|
+        File.open(CACHE_FILE, 'w') do |f|
           f.write repos.to_json
         end
 
@@ -74,7 +74,7 @@ class Github
       def cache_all_issues_for_repo
         issues = []
         issues += get_repo_issues
-        File.open(@issue_cache_file, 'w') do |f|
+        File.open(ISSUE_CACHE_FILE, 'w') do |f|
           f.write issues.to_json
         end
 
@@ -97,7 +97,7 @@ class Github
       def cache_all_close_issues_for_repo
         issues = []
         issues += get_repo_close_issues
-        File.open(@all_issue_cache_file, 'w') do |f|
+        File.open(ALL_ISSUE_CACHE_FILE, 'w') do |f|
           f.write issues.to_json
         end
 

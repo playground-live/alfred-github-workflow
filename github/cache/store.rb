@@ -5,20 +5,20 @@ class Github
     # Store date method
     module Store
       include Load
-      # stor the token write in @token_file
+      # stor the token write in TOKEN_FILE
       def store_token(token)
         return unless token && !token.empty?
-        File.open(@token_file, 'w') do |f|
+        File.open(TOKEN_FILE, 'w') do |f|
           f.write(token)
         end
         load_token
         rebuild_user_repos_cache
       end
 
-      # store current_repo write in @current_repo_file
+      # store current_repo write in CURRENT_REPO_FILE
       def store_current_repo(repo)
         return unless repo && !repo.empty?
-        File.open(@current_repo_file, 'w') do |f|
+        File.open(CURRENT_REPO_FILE, 'w') do |f|
           f.write(repo)
         end
       end

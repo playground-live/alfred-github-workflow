@@ -1,6 +1,7 @@
 require_relative 'cache/store'
-# include cache_store
+
 class Github
+  # include cache_store
   module Cache
     include Store
   end

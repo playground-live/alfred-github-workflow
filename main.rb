@@ -25,7 +25,7 @@ begin
       results = github.search_repo(ARGV[1] || '')
       output = XmlBuilder.build do |xml|
         xml.items do
-          if results.length > 0
+          if !results.empty?
             results.each do |repo|
               xml.item Item.new(repo['url'], repo['name'], repo['name'], repo['url'], 'yes')
             end
@@ -42,7 +42,7 @@ begin
       results = github.search_issue(ARGV[1] || '')
       output = XmlBuilder.build do |xml|
         xml.items do
-          if results.length > 0
+          if !results.empty?
             results.each do |repo|
               xml.item Item.new(repo['url'], repo['url'], repo['name'.gsub('<',' ')], repo['url'], 'yes')
             end
@@ -60,7 +60,7 @@ begin
       results += github.search_issue(ARGV[1] || '')
       output = XmlBuilder.build do |xml|
         xml.items do
-          if results.length > 0
+          if !results.empty?
             results.each do |repo|
               xml.item Item.new(repo['url'], repo['url'], repo['name'], repo['url'], 'yes')
             end
@@ -76,7 +76,7 @@ begin
       result = github.load_current_repo
       output = XmlBuilder.build do |xml|
         xml.items do
-          if result.empty?
+          if !result.empty?
             xml.item Item.new(
               nil, query, 'the current repo is empty!', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
             )

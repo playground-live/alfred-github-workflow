@@ -12,17 +12,15 @@ class InvalidToken < StandardError; end
 class Github
   include Request
   include Cache
-  # include CacheStore
-  # include CacheLoad
   include Search
-  def initialize
-    @token_file = '.auth_token'
-    @base_uri = 'https://api.github.com'
-    @cache_file = '.repositoriescache'
-    @issue_cache_file = '.issuescache'
-    @current_repo_file = '.currentrepo'
-    @all_issue_cache_file = '.allissuescache'
-  end
+
+  TOKEN_FILE = '.auth_token'.freeze
+  BASE_URI = 'https://api.github.com'.freeze
+  CACHE_FILE = '.repositoriescache'.freeze
+  ISSUE_CACHE_FILE = '.issuescache'.freeze
+  CURRENT_REPO_FILE = '.currentrepo'.freeze
+  ALL_ISSUE_CACHE_FILE = '.allissuescache'.freeze
+  def initialize; end
 
   # search repo from repositories cache file and github
   def search_repo(query)

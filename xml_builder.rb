@@ -5,7 +5,7 @@ class XmlBuilder
   attr_reader :output
 
   def initialize
-    @output = '<?xml version="1.0"?>\n'
+    @output = '<?xml version="1.0"?>'"\n"
   end
 
   def self.build(&block)
@@ -15,7 +15,7 @@ class XmlBuilder
   end
 
   def items(&block)
-    @output << '<items>\n'
+    @output << '<items>'"\n"
     yield(self)
     @output << '</items>'
   end
