@@ -2,18 +2,18 @@ require 'net/http'
 require 'json'
 require './xml_builder'
 require 'cgi'
-require './tool.rb'
-require './cache_store.rb'
-require './cache_load.rb'
-require './search.rb'
+require_relative 'github/request'
+require_relative 'github/cache'
+require_relative 'github/search'
 
 class InvalidToken < StandardError; end
 
 # method with github
 class Github
-  include Tool
-  include CacheStore
-  include CacheLoad
+  include Request
+  include Cache
+  # include CacheStore
+  # include CacheLoad
   include Search
   def initialize
     @token_file = '.auth_token'
@@ -56,20 +56,17 @@ class Github
 
   # create a issue in current repositories
   def create(query)
-    raise InvalidToken unless test_authentication
     load_token
     load_current_repo
-    uri = URI.parse("https://api.github.com/repos/#{@current_repo}/issues?access_token=#{@token}")
-    http = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true)
-    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+    result = post("/repos/#{@current_repo}/issues?access_token=#{@token}", query)
+    puts result
+  end
 
-    request = Net::HTTP::Post.new(uri.request_uri)
-    request['Content-Type'] = 'application/json'
-    request.body = { 'title' => query }.to_json
-
-    response = http.request(request)
-
-    url = response.body
-    JSON.parse(url)['html_url']
+  # test the auth token
+  def test_authentication
+    load_token
+    return false if !@token || @token.length == 0
+    res = get "/"
+    !res.has_key?('error')
   end
 end

@@ -1,15 +1,5 @@
 # give some tool for github
-module Tool
-
-  module_function
-  # test the auth token
-  def test_authentication
-    load_token
-    return false if !@token || @token.length == 0
-    res = get "/"
-    !res.has_key?('error')
-  end
-
+module Request
   # communicate with github by get
   def get(path, params = {})
     params['per_page'] = 100
@@ -38,7 +28,21 @@ module Tool
         break
       end
     end while true
-
     json_all
+  end
+
+  def post(path,query)
+    uri = URI.parse("#{@base_uri}#{path}")
+    http = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true)
+    http.verify_mode = OpenSSL::SSL::VERIFY_PEER
+
+    request = Net::HTTP::Post.new(uri.request_uri)
+    request['Content-Type'] = 'application/json'
+    request.body = { 'title' => query }.to_json
+
+    response = http.request(request)
+
+    url = response.body
+    JSON.parse(url)['html_url']
   end
 end

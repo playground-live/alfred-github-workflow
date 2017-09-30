@@ -1,11 +1,11 @@
-require './tool.rb'
+require_relative 'request'
 
 module Search
-  include Tool 
+  include Request
   # search all repositories in github
   def search_all_repos(query)
     return [] if !query || query.length == 0
-    raise InvalidToken unless test_authentication
+    #raise InvalidToken unless test_authentication
 
     parts = query.split('/', 2)
 
@@ -42,7 +42,7 @@ module Search
   # search all issues in github
   def search_all_issues(query)
     return [] if !query || query.length == 0
-    raise InvalidToken unless test_authentication
+    #raise InvalidToken unless test_authentication
 
     parts = query.split('/', 2)
 
@@ -79,7 +79,7 @@ module Search
   # search all closed issues in github
   def search_all_close_issues(query)
     return [] if !query || query.length == 0
-    raise InvalidToken unless test_authentication
+    #raise InvalidToken unless test_authentication
 
     parts = query.split('/', 2)
 
