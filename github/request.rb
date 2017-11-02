@@ -8,7 +8,7 @@ class Github
       uri = URI("#{BASE_URI}#{path}?#{qs}")
       json_all = []
 
-      begin
+      loop do
         res = Net::HTTP.start(uri.hostname, uri.port, use_ssl: true) do |http|
           req = Net::HTTP::Get.new(uri)
           req['Accept'] = 'application/vnd.github.v3+json'
@@ -28,7 +28,7 @@ class Github
           json_all = json
           break
         end
-      end while true
+      end
       json_all
     end
 

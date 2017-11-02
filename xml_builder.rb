@@ -15,7 +15,7 @@ class XmlBuilder
   end
 
   def items(&block)
-    @output << '<items>'"\n"
+    @output << "<items>\n"
     yield(self)
     @output << '</items>'
   end

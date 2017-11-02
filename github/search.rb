@@ -1,6 +1,5 @@
 require_relative 'request'
 class Github
-  # search method
   module Search
     include Request
     # search all repositories in github

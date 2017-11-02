@@ -20,7 +20,6 @@ class Github
   ISSUE_CACHE_FILE = '.issuescache'.freeze
   CURRENT_REPO_FILE = '.currentrepo'.freeze
   ALL_ISSUE_CACHE_FILE = '.allissuescache'.freeze
-  def initialize; end
 
   # search repo from repositories cache file and github
   def search_repo(query)
