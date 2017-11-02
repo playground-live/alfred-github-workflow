@@ -29,7 +29,7 @@ repo権限のみをつけたtokenを発行して、取得したtokenをコピー
 - tokenの登録
 
 ```
-gi-auth 取得したtoken
+gi-auth 取得したtoken
 ```
 
 ![register your auth token](images/gi-auth.gif)
@@ -91,3 +91,5 @@ gi-update
 - Alfred.GithubRepos: https://github.com/edgarjs/alfred-github-repos
 - Ruby HTTP 通信: https://docs.ruby-lang.org/ja/latest/library/net=2fhttp.html
 - HTTP context type: https://altarf.net/computer/ruby/2890
+
+

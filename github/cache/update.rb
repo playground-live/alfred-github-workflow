@@ -1,6 +1,5 @@
 class Github
   module Cache
-    # update cache method
     module Update
       # upadate all repositoriese cache
       def rebuild_user_repos_cache
@@ -75,7 +74,6 @@ class Github
         end
       end
 
-      # communicate with github to get repositories of organization
       def get_org_repos(org)
         res = get "/orgs/#{org}/repos"
         if res.is_a?(Array)
