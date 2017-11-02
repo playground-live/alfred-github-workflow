@@ -32,8 +32,7 @@ class Github
 
       # put all repositorise data to cache file
       def cache_all_repos_for_user
-        repos = []
-        repos += get_user_repos
+        repos = get_user_repos
         get_user_orgs.each do |org|
           repos += get_org_repos(org['login'])
         end
@@ -90,8 +89,7 @@ class Github
 
       # put all issues data to cache file
       def cache_all_issues_for_repo
-        issues = []
-        issues += get_repo_issues
+        issues = get_repo_issues
         File.open(ISSUE_CACHE_FILE, 'w') do |f|
           f.write issues.to_json
         end
@@ -114,8 +112,7 @@ class Github
 
       # put all closed issues data to cache file
       def cache_all_close_issues_for_repo
-        issues = []
-        issues += get_repo_close_issues
+        issues = get_repo_close_issues
         File.open(ALL_ISSUE_CACHE_FILE, 'w') do |f|
           f.write issues.to_json
         end
@@ -124,7 +121,6 @@ class Github
       end
 
       def cache_all_assigned_issues_for_repo
-        issues = []
         issues = get_repo_assigned_issues
         File.open(ASSIGNED_ISSUE_FILE, 'w') do |f|
           f.write issues.to_json

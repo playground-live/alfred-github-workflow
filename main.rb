@@ -34,7 +34,7 @@ begin
             end
           else
             xml.item Item.new(
-              nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'Update the repository cache and try again.', 'Rebuilds your local cache from GitHub, then searches again; gh-update to rebuild anytime.', 'yes', 'error.png'
             )
           end
         end
@@ -51,11 +51,11 @@ begin
             end
           elsif github.load_current_repo.empty?
             xml.item Item.new(
-              nil, query, 'the current repo is empty ', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'the current repo is empty ', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           else
             xml.item Item.new(
-              nil, query, 'there is no opened issue in this repo', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'there is no opened issue in this repo', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           end
         end
@@ -72,11 +72,11 @@ begin
             end
           elsif github.load_current_repo.empty?
             xml.item Item.new(
-              nil, query, 'the current repo is empty ', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'the current repo is empty ', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           else
             xml.item Item.new(
-              nil, query, 'there is no issue you have been assigned in this repo', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'there is no issue you have been assigned in this repo', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           end
         end
@@ -94,11 +94,11 @@ begin
             end
           elsif github.load_current_repo.empty?
             xml.item Item.new(
-              nil, query, 'the current repo is empty ', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'the current repo is empty ', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           else
             xml.item Item.new(
-              nil, query, 'there is no issue in this repo', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'there is no issue in this repo', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           end
         end
@@ -110,7 +110,7 @@ begin
         xml.items do
           if !result.empty?
             xml.item Item.new(
-              nil, query, 'the current repo is empty!', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'FE3390F7-206C-45C4-94BB-5DD14DE23A1B.png'
+              nil, query, 'the current repo is empty!', 'Please input gi-repo and set the repo where the issue want to create', 'yes', 'error.png'
             )
           else
             xml.item Item.new(nil, query, 'create issue', result, 'yes')

@@ -10,7 +10,7 @@
 
 ## 概要
 
-Create Issue は Aflred 3対応のGitHub issueを検索と新規ワークフローである。
+GitHub issueを検索と新規できるワークフローである。
 
 出来る機能は：
 
@@ -66,7 +66,7 @@ gi-assigned
 
 ![create issue](images/gi-assigned.gif)
 
-- issue 作成
+- issue 作成
 
 ![issue page](images/gi-create.gif)
 
@@ -86,10 +86,3 @@ gi-update
 - Alfred.GithubRepos: https://github.com/edgarjs/alfred-github-repos
 - Ruby HTTP 通信: https://docs.ruby-lang.org/ja/latest/library/net=2fhttp.html
 - HTTP context type: https://altarf.net/computer/ruby/2890
-***
-### 開発
-
-1. 修正
-1. alfredでexport
-1. exportしてできた.alfredworkflowファイルをこのディレクトリに移動(上書き)
-1. push

@@ -44,8 +44,7 @@ class Github
   end
 
   def search_assigned_issue
-    issues = load_and_cache_user_assigned_issues
-    issues
+    load_and_cache_user_assigned_issues
   end
 
   # search closed issue from repositories cache file and github
