@@ -15,6 +15,11 @@ class Github
         @current_repo = File.read(CURRENT_REPO_FILE) if File.exist?(CURRENT_REPO_FILE)
       end
 
+      # get user accoutn
+      def load_user_account
+        @user_account = File.read(USER_ACCOUNT_FILE) if File.exist?(USER_ACCOUNT_FILE)  
+      end
+
       # get all repositories in cache file
       def load_and_cache_user_repos
         if File.exist?(CACHE_FILE)
@@ -39,6 +44,14 @@ class Github
           JSON.parse(File.read(ALL_ISSUE_CACHE_FILE))
         else
           cache_all_close_issues_for_repo
+        end
+      end
+
+      def load_and_cache_user_assigned_issues
+        if File.exist?(ASSIGNED_ISSUE_FILE)
+          JSON.parse(File.read(ASSIGNED_ISSUE_FILE))
+        else
+          cache_all_assigned_issues_for_repo
         end
       end
     end

@@ -4,73 +4,92 @@
 
 # 使い方
 
-releaseからダウンロードしてください
+ダウンロードしてください
 
-## 認証
+<a href="./Create issue.alfredworkflow?raw=true">ダウンロード</a>
+
+## 概要
+
+Create Issue は Aflred 3対応のGitHub issueを検索と新規ワークフローである。
+
+出来る機能は：
+
+- issue検索
+- assigned-issue検索
+- all-issue検索(closed issue含む)
+- issue作成
+
+## SetUp
+- tokenの取得
+
+repo権限のみをつけたtokenを発行して、取得したtokenをコピーする。
+
+![open github page](images/gi-token.gif)
+
+- tokenの登録
+
 ```
-gi-auth
+gi-auth 取得したtoken
 ```
-スペースを開けずにEnterを押すと、Githubのaccesstoken発行ページに遷移します
-![open github page](images/open_auth.png)
 
-repo権限をつけたtokenを発行して、取得したtokenをコピーしてください
+![register your auth token](images/gi-auth.gif)
 
-![get auth token](images/get_token.png)
-
-```
-gi-auth 取得したtoken
-```
-取得したtokenを入力してください
-![register your auth token](images/gi-auth.png)
-
-## Repositoryを登録
+- Repositoryを登録
 
 どのRepositoryにIssueを作るか登録します
 ```
-gi-repo issueを作りたいRepository
+gi-repo
 ```
 
-![select your repo](images/gi-repo.png)
+![select your repo](images/gi-repo.gif)
 
-## issue検索
-openになっているIssueを検索
+## 機能
+
+- issue 検索
 ```
 gi 名前
 ```
-![search issue](images/gi.png)
+![search issue](images/gi-issue.gif)
 
-## closeのIssueも検索
-closeのIssueを含めて全て検索
+- all-issue 検索
 ```
 gi-all 名前
 ```
 
-![search issue](images/gi-all.png)
+![search issue](images/gi-all.gif)
 
-## issue作成
+- assigned-issue検索
 
 ```
-gi-create issueの名前
+gi-assigned 
 ```
 
-![create issue](images/gi-create.png)
+![create issue](images/gi-assigned.gif)
 
-issueが作成できました
+- issue 作成
 
-![issue page](images/created_issue.png)
+![issue page](images/gi-create.gif)
 
-## cacheのupdate
-cacheがうまく更新されない場合、updateすることができます
+- cache の更新
+
+起動するたびにissueの更新をチェックしますが、うまく更新できないときは `gi-update` を実行してみてください
+
 ```
 gi-update
 ```
 
-![update cache](images/gi-update.png)
+![update cache](images/gi-update.gif)
 
 ***
-
 ### 参考リンク
 - Github API: https://developer.github.com/v3/issues/
 - Alfred.GithubRepos: https://github.com/edgarjs/alfred-github-repos
 - Ruby HTTP 通信: https://docs.ruby-lang.org/ja/latest/library/net=2fhttp.html
 - HTTP context type: https://altarf.net/computer/ruby/2890
+***
+### 開発
+
+1. 修正
+1. alfredでexport
+1. exportしてできた.alfredworkflowファイルをこのディレクトリに移動(上書き)
+1. push

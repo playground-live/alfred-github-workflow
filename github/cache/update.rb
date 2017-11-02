@@ -8,6 +8,11 @@ class Github
         cache_all_repos_for_user
       end
 
+      # update user account
+      def rebuild_user_account
+        File.delete(USER_ACCOUNT_FILE)  if File.exist?(USER_ACCOUNT_FILE)
+        cache_user_account
+      end
       # upadate all issues cache of current repo
       def rebuild_user_issues_cache
         File.delete(ISSUE_CACHE_FILE) if File.exist?(ISSUE_CACHE_FILE)
@@ -18,6 +23,11 @@ class Github
       def rebuild_user_close_issues_cache
         File.delete(ALL_ISSUE_CACHE_FILE) if File.exist?(ALL_ISSUE_CACHE_FILE)
         cache_all_close_issues_for_repo
+      end
+
+      def rebuild_user_assgined_issues_cache
+        File.delete(ASSIGNED_ISSUE_FILE) if File.exist?(ASSIGNED_ISSUE_FILE)
+        cache_all_assigned_issues_for_repo
       end
 
       # put all repositorise data to cache file
@@ -32,6 +42,14 @@ class Github
         end
 
         repos
+      end
+
+      def cache_user_account
+        res = get '/user'
+        user_account = res['login']
+        File.open(USER_ACCOUNT_FILE, 'w') do |f|
+          f.write user_account.to_json  
+        end
       end
 
       # communicate with github to get repositories of user
@@ -81,6 +99,7 @@ class Github
         issues
       end
 
+
       # communicate with github to get issues of user
       def get_repo_issues
         res = get "/repos/#{load_current_repo}/issues"
@@ -102,6 +121,38 @@ class Github
         end
 
         issues
+      end
+
+      def cache_all_assigned_issues_for_repo
+        issues = []
+        issues = get_repo_assigned_issues
+        File.open(ASSIGNED_ISSUE_FILE, 'w') do |f|
+          f.write issues.to_json
+        end
+        issues
+      end
+
+      def get_repo_assigned_issues
+        json_result = []
+        res = get "/repos/#{load_current_repo}/issues"
+
+        results = res.reject do |result|
+          result['assignee'].nil?
+        end
+
+        results.each do |assignees|
+          assignees['assignees'].each do |assigned|
+            if assigned['login'] == "akias"
+              json_result << assignees
+            else
+              []
+            end
+          end
+        end
+
+        json_result.map do |issue|
+          { 'name' => "#{issue['title']}[assigned]", 'url' => issue['html_url'] }
+        end
       end
 
       # communicate with github to get closed issues of user
