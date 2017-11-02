@@ -68,6 +68,11 @@ gi-assigned
 
 - issue 作成
 
+```
+gi-create 
+```
+
+
 ![issue page](images/gi-create.gif)
 
 - cache の更新

@@ -47,7 +47,7 @@ class Github
         res = get '/user'
         user_account = res['login']
         File.open(USER_ACCOUNT_FILE, 'w') do |f|
-          f.write user_account.to_json  
+          f.write user_account
         end
       end
 
@@ -138,7 +138,7 @@ class Github
 
         results.each do |assignees|
           assignees['assignees'].each do |assigned|
-            if assigned['login'] == "akias"
+            if assigned['login'] == load_user_account
               json_result << assignees
             else
               []

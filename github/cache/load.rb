@@ -15,7 +15,6 @@ class Github
         @current_repo = File.read(CURRENT_REPO_FILE) if File.exist?(CURRENT_REPO_FILE)
       end
 
-      # get user accoutn
       def load_user_account
         @user_account = File.read(USER_ACCOUNT_FILE) if File.exist?(USER_ACCOUNT_FILE)  
       end
