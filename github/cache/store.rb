@@ -2,7 +2,6 @@ require_relative 'load'
 # store token and current_repo
 class Github
   module Cache
-    # Store date method
     module Store
       include Load
       # stor the token write in TOKEN_FILE

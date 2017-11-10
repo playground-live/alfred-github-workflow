@@ -20,6 +20,8 @@ class Github
   ISSUE_CACHE_FILE = '.issuescache'.freeze
   CURRENT_REPO_FILE = '.currentrepo'.freeze
   ALL_ISSUE_CACHE_FILE = '.allissuescache'.freeze
+  USER_ACCOUNT_FILE = '.useraccountcache'.freeze
+  ASSIGNED_ISSUE_FILE = '.assignedissuecache'.freeze
 
   # search repo from repositories cache file and github
   def search_repo(query)
@@ -39,6 +41,10 @@ class Github
     end
     results += search_all_issues(query) if query =~ %r{\/}
     results.uniq
+  end
+
+  def search_assigned_issue
+    load_and_cache_user_assigned_issues
   end
 
   # search closed issue from repositories cache file and github

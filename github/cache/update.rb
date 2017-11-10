@@ -1,6 +1,5 @@
 class Github
   module Cache
-    # update cache method
     module Update
       # upadate all repositoriese cache
       def rebuild_user_repos_cache
@@ -8,6 +7,11 @@ class Github
         cache_all_repos_for_user
       end
 
+      # update user account
+      def rebuild_user_account
+        File.delete(USER_ACCOUNT_FILE)  if File.exist?(USER_ACCOUNT_FILE)
+        cache_user_account
+      end
       # upadate all issues cache of current repo
       def rebuild_user_issues_cache
         File.delete(ISSUE_CACHE_FILE) if File.exist?(ISSUE_CACHE_FILE)
@@ -20,10 +24,14 @@ class Github
         cache_all_close_issues_for_repo
       end
 
+      def rebuild_user_assgined_issues_cache
+        File.delete(ASSIGNED_ISSUE_FILE) if File.exist?(ASSIGNED_ISSUE_FILE)
+        cache_all_assigned_issues_for_repo
+      end
+
       # put all repositorise data to cache file
       def cache_all_repos_for_user
-        repos = []
-        repos += get_user_repos
+        repos = get_user_repos
         get_user_orgs.each do |org|
           repos += get_org_repos(org['login'])
         end
@@ -32,6 +40,14 @@ class Github
         end
 
         repos
+      end
+
+      def cache_user_account
+        res = get '/user'
+        user_account = res['login']
+        File.open(USER_ACCOUNT_FILE, 'w') do |f|
+          f.write user_account
+        end
       end
 
       # communicate with github to get repositories of user
@@ -58,7 +74,6 @@ class Github
         end
       end
 
-      # communicate with github to get repositories of organization
       def get_org_repos(org)
         res = get "/orgs/#{org}/repos"
         if res.is_a?(Array)
@@ -72,14 +87,14 @@ class Github
 
       # put all issues data to cache file
       def cache_all_issues_for_repo
-        issues = []
-        issues += get_repo_issues
+        issues = get_repo_issues
         File.open(ISSUE_CACHE_FILE, 'w') do |f|
           f.write issues.to_json
         end
 
         issues
       end
+
 
       # communicate with github to get issues of user
       def get_repo_issues
@@ -95,13 +110,43 @@ class Github
 
       # put all closed issues data to cache file
       def cache_all_close_issues_for_repo
-        issues = []
-        issues += get_repo_close_issues
+        issues = get_repo_close_issues
         File.open(ALL_ISSUE_CACHE_FILE, 'w') do |f|
           f.write issues.to_json
         end
 
         issues
+      end
+
+      def cache_all_assigned_issues_for_repo
+        issues = get_repo_assigned_issues
+        File.open(ASSIGNED_ISSUE_FILE, 'w') do |f|
+          f.write issues.to_json
+        end
+        issues
+      end
+
+      def get_repo_assigned_issues
+        json_result = []
+        res = get "/repos/#{load_current_repo}/issues"
+
+        results = res.reject do |result|
+          result['assignee'].nil?
+        end
+
+        results.each do |assignees|
+          assignees['assignees'].each do |assigned|
+            if assigned['login'] == load_user_account
+              json_result << assignees
+            else
+              []
+            end
+          end
+        end
+
+        json_result.map do |issue|
+          { 'name' => "#{issue['title']}[assigned]", 'url' => issue['html_url'] }
+        end
       end
 
       # communicate with github to get closed issues of user
