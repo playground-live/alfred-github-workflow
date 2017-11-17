@@ -2,9 +2,17 @@ class Github
   module Cache
     module Update
       # upadate all repositoriese cache
-      def rebuild_user_repos_cache
-        File.delete(CACHE_FILE) if File.exist?(CACHE_FILE)
-        cache_all_repos_for_user
+      def rebuild_user_repos_cache(db)
+        sql = <<-SQL
+          create table if not exists repos(
+            id integer PRIMARY KEY,
+            name varchar(200),
+            url varchar(100)
+          );
+        SQL
+        db.execute(sql)
+        db.execute('delete from repos')
+        cache_all_repos_for_user(db)
       end
 
       # update user account
@@ -12,6 +20,7 @@ class Github
         File.delete(USER_ACCOUNT_FILE)  if File.exist?(USER_ACCOUNT_FILE)
         cache_user_account
       end
+
       # upadate all issues cache of current repo
       def rebuild_user_issues_cache
         File.delete(ISSUE_CACHE_FILE) if File.exist?(ISSUE_CACHE_FILE)
@@ -30,13 +39,15 @@ class Github
       end
 
       # put all repositorise data to cache file
-      def cache_all_repos_for_user
+      def cache_all_repos_for_user(db)
         repos = get_user_repos
         get_user_orgs.each do |org|
           repos += get_org_repos(org['login'])
         end
-        File.open(CACHE_FILE, 'w') do |f|
-          f.write repos.to_json
+
+        sql = 'insert or replace into repos values (?, ?, ?)'
+        repos.each do |repo|
+          db.execute(sql, repo['id'], repo['name'], repo['url'])
         end
 
         repos
@@ -55,7 +66,7 @@ class Github
         res = get '/user/repos'
         if res.is_a?(Array)
           res.map do |repo|
-            { 'name' => repo['full_name'], 'url' => repo['html_url'] }
+            { 'id' => repo['id'], 'name' => repo['full_name'], 'url' => repo['html_url'] }
           end
         else
           []

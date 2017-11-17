@@ -1,7 +1,9 @@
 require './github.rb'
+require 'sqlite3'
 
 query = ARGV[0]
 github = Github.new
+db = SQLite3::Database.new('github.sqlite')
 
 begin
   if query == '--auth'
@@ -10,9 +12,10 @@ begin
   else
     raise InvalidToken unless github.test_authentication
     if query == '--update'
-      github.rebuild_user_repos_cache
+      github.rebuild_user_repos_cache(db)
       github.rebuild_user_issues_cache
       github.rebuild_user_close_issues_cache
+      github.rebuild_user_assgined_issues_cache
     elsif query == '--repo'
       github.store_current_repo(ARGV[1])
       github.rebuild_user_issues_cache
@@ -25,7 +28,7 @@ begin
       github.rebuild_user_close_issues_cache
       github.rebuild_user_assgined_issues_cache
     elsif query == '--searchrepos'
-      results = github.search_repo(ARGV[1] || '')
+      results = github.search_repo(ARGV[1] || '', db)
       output = XmlBuilder.build do |xml|
         xml.items do
           if !results.empty?
@@ -125,7 +128,7 @@ rescue InvalidToken
   output = XmlBuilder.build do |xml|
     xml.items do
       xml.item Item.new(
-        'gh-error', 'gh-auth ', 'Missing or invalid token!', 'Please set your token with gh-auth. ↩ to go there now.', 'yes'
+        'gh-error', 'gh-auth ', 'Missing or invalid token!', 'Please set your token with gh-auth. ↩ to go there now.', 'yes','error.png'
       )
     end
   end

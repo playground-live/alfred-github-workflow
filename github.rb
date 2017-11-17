@@ -2,6 +2,7 @@ require 'net/http'
 require 'json'
 require './xml_builder'
 require 'cgi'
+require 'sqlite3'
 require_relative 'github/request'
 require_relative 'github/cache'
 require_relative 'github/search'
@@ -16,7 +17,6 @@ class Github
 
   TOKEN_FILE = '.auth_token'.freeze
   BASE_URI = 'https://api.github.com'.freeze
-  CACHE_FILE = '.repositoriescache'.freeze
   ISSUE_CACHE_FILE = '.issuescache'.freeze
   CURRENT_REPO_FILE = '.currentrepo'.freeze
   ALL_ISSUE_CACHE_FILE = '.allissuescache'.freeze
@@ -24,13 +24,14 @@ class Github
   ASSIGNED_ISSUE_FILE = '.assignedissuecache'.freeze
 
   # search repo from repositories cache file and github
-  def search_repo(query)
-    repos = load_and_cache_user_repos
+  def search_repo(query, db)
+    repos = load_and_cache_user_repos(db)
     results = repos.select do |repo|
       repo['name'] =~ Regexp.new(query, 'i')
     end
     results += search_all_repos(query) if query =~ %r{\/}
     results.uniq
+    results
   end
 
   # search issue from repositories cache file and github

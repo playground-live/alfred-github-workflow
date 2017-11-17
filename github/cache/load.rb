@@ -16,12 +16,10 @@ class Github
         @user_account = File.read(USER_ACCOUNT_FILE) if File.exist?(USER_ACCOUNT_FILE)  
       end
 
-      def load_and_cache_user_repos
-        if File.exist?(CACHE_FILE)
-          JSON.parse(File.read(CACHE_FILE))
-        else
-          cache_all_repos_for_user
-        end
+      def load_and_cache_user_repos(db)
+        db.results_as_hash = true
+        requests = db.execute('select *from repos')
+        requests
       end
 
       def load_and_cache_user_issues
