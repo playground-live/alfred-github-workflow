@@ -5,7 +5,6 @@ require 'cgi'
 require 'sqlite3'
 require_relative 'github/request'
 require_relative 'github/cache'
-require_relative 'github/search'
 
 class InvalidToken < StandardError; end
 
@@ -13,15 +12,11 @@ class InvalidToken < StandardError; end
 class Github
   include Request
   include Cache
-  include Search
 
   TOKEN_FILE = '.auth_token'.freeze
   BASE_URI = 'https://api.github.com'.freeze
-  ISSUE_CACHE_FILE = '.issuescache'.freeze
   CURRENT_REPO_FILE = '.currentrepo'.freeze
-  ALL_ISSUE_CACHE_FILE = '.allissuescache'.freeze
   USER_ACCOUNT_FILE = '.useraccountcache'.freeze
-  ASSIGNED_ISSUE_FILE = '.assignedissuecache'.freeze
 
   # search repo from repositories cache file and github
   def search_repo(query, db)
@@ -29,32 +24,29 @@ class Github
     results = repos.select do |repo|
       repo['name'] =~ Regexp.new(query, 'i')
     end
-    results += search_all_repos(query) if query =~ %r{\/}
     results.uniq
     results
   end
 
   # search issue from repositories cache file and github
-  def search_issue(query)
-    issues = load_and_cache_user_issues
+  def search_issue(query, db)
+    issues = load_and_cache_user_issues(db)
     results = issues.select do |issue|
       issue['name'] =~ Regexp.new(query, 'i')
     end
-    results += search_all_issues(query) if query =~ %r{\/}
     results.uniq
   end
 
-  def search_assigned_issue
-    load_and_cache_user_assigned_issues
+  def search_assigned_issue(db)
+    load_and_cache_user_assigned_issues(db)
   end
 
   # search closed issue from repositories cache file and github
-  def search_close_issue(query)
-    issues = load_and_cache_user_close_issues
+  def search_close_issue(query, db)
+    issues = load_and_cache_user_close_issues(db)
     results = issues.select do |issue|
       issue['name'] =~ Regexp.new(query, 'i')
     end
-    results += search_all_close_issues(query) if query =~ %r{\/}
     results.uniq
   end
 

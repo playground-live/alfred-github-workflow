@@ -22,28 +22,22 @@ class Github
         requests
       end
 
-      def load_and_cache_user_issues
-        if File.exist?(ISSUE_CACHE_FILE)
-          JSON.parse(File.read(ISSUE_CACHE_FILE))
-        else
-          cache_all_issues_for_repo
-        end
+      def load_and_cache_user_issues(db)
+        db.results_as_hash = true
+        requests = db.execute("select *from issues where status = 'open' order by id desc")
+        requests
       end
 
-      def load_and_cache_user_close_issues
-        if File.exist?(ALL_ISSUE_CACHE_FILE)
-          JSON.parse(File.read(ALL_ISSUE_CACHE_FILE))
-        else
-          cache_all_close_issues_for_repo
-        end
+      def load_and_cache_user_close_issues(db)
+        db.results_as_hash = true
+        requests = db.execute("select *from issues where status = 'closed' order by id desc")
+        requests
       end
 
-      def load_and_cache_user_assigned_issues
-        if File.exist?(ASSIGNED_ISSUE_FILE)
-          JSON.parse(File.read(ASSIGNED_ISSUE_FILE))
-        else
-          cache_all_assigned_issues_for_repo
-        end
+      def load_and_cache_user_assigned_issues(db)
+        db.results_as_hash = true
+        requests = db.execute('select *from assigned_issues order by id desc')
+        requests
       end
     end
   end

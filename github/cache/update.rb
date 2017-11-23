@@ -17,25 +17,37 @@ class Github
 
       # update user account
       def rebuild_user_account
-        File.delete(USER_ACCOUNT_FILE)  if File.exist?(USER_ACCOUNT_FILE)
+        File.delete(USER_ACCOUNT_FILE) if File.exist?(USER_ACCOUNT_FILE)
         cache_user_account
       end
 
       # upadate all issues cache of current repo
-      def rebuild_user_issues_cache
-        File.delete(ISSUE_CACHE_FILE) if File.exist?(ISSUE_CACHE_FILE)
-        cache_all_issues_for_repo
+      def rebuild_user_issues_cache(db)
+        sql = <<-SQL
+        create table if not exists issues(
+          id integer PRIMARY KEY,
+          name varchar(200),
+          url varchar(100),
+          status varchar(20)
+        );
+        SQL
+        db.execute(sql)
+        db.execute('delete from issues')
+
+        cache_all_issues_for_repo(db)
       end
 
-      # upadate all closed issues cache of current repo
-      def rebuild_user_close_issues_cache
-        File.delete(ALL_ISSUE_CACHE_FILE) if File.exist?(ALL_ISSUE_CACHE_FILE)
-        cache_all_close_issues_for_repo
-      end
-
-      def rebuild_user_assgined_issues_cache
-        File.delete(ASSIGNED_ISSUE_FILE) if File.exist?(ASSIGNED_ISSUE_FILE)
-        cache_all_assigned_issues_for_repo
+      def rebuild_user_assigned_issues_cache(db)
+        sql = <<-SQL
+        create table if not exists assigned_issues(
+          id integer PRIMARY KEY,
+          name varchar(200),
+          url varchar(100)
+        );
+        SQL
+        db.execute(sql)
+        db.execute('delete from assigned_issues')
+        cache_all_assigned_issues_for_repo(db)
       end
 
       # put all repositorise data to cache file
@@ -49,8 +61,6 @@ class Github
         repos.each do |repo|
           db.execute(sql, repo['id'], repo['name'], repo['url'])
         end
-
-        repos
       end
 
       def cache_user_account
@@ -97,44 +107,36 @@ class Github
       end
 
       # put all issues data to cache file
-      def cache_all_issues_for_repo
+      def cache_all_issues_for_repo(db)
         issues = get_repo_issues
-        File.open(ISSUE_CACHE_FILE, 'w') do |f|
-          f.write issues.to_json
+
+        sql = 'insert or replace into issues values (?, ?, ?, ?)'
+        issues.each do |issue|
+          db.execute(sql, issue['id'], issue['name'], issue['url'], issue['state'])
         end
 
         issues
       end
 
-
       # communicate with github to get issues of user
       def get_repo_issues
-        res = get "/repos/#{load_current_repo}/issues"
+        res = get "/repos/#{load_current_repo}/issues", 'state' => 'all'
         if res.is_a?(Array)
           res.map do |issue|
-            { 'name' => issue['title'], 'url' => issue['html_url'] }
+            { 'id' => issue['id'], 'name' => issue['title'], 'url' => issue['html_url'] , 'state' => issue['state'] }
           end
         else
           []
         end
       end
 
-      # put all closed issues data to cache file
-      def cache_all_close_issues_for_repo
-        issues = get_repo_close_issues
-        File.open(ALL_ISSUE_CACHE_FILE, 'w') do |f|
-          f.write issues.to_json
-        end
-
-        issues
-      end
-
-      def cache_all_assigned_issues_for_repo
+      def cache_all_assigned_issues_for_repo(db)
         issues = get_repo_assigned_issues
-        File.open(ASSIGNED_ISSUE_FILE, 'w') do |f|
-          f.write issues.to_json
+        sql = 'insert or replace into assigned_issues values (?, ?, ?)'
+        issues.each do |issue|
+          db.execute(sql, issue['id'], issue['name'], issue['url'])
         end
-        issues
+
       end
 
       def get_repo_assigned_issues
@@ -156,22 +158,10 @@ class Github
         end
 
         json_result.map do |issue|
-          { 'name' => "#{issue['title']}[assigned]", 'url' => issue['html_url'] }
+          { 'id' => issue['id'], 'name' => "#{issue['title']}[assigned]", 'url' => issue['html_url'] }
         end
       end
 
-      # communicate with github to get closed issues of user
-      def get_repo_close_issues
-        # 'state' => 'closed' is the parameters of 'get'  default is 'opend'
-        res = get "/repos/#{load_current_repo}/issues", 'state' => 'closed'
-        if res.is_a?(Array)
-          res.map do |issue|
-            { 'name' => "#{issue['title']}[closed]", 'url' => issue['html_url'] }
-          end
-        else
-          []
-        end
-      end
     end
   end
 end

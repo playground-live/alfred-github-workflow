@@ -3,9 +3,9 @@ require 'sqlite3'
 
 query = ARGV[0]
 github = Github.new
-db = SQLite3::Database.new('github.sqlite')
 
 begin
+  db = SQLite3::Database.new('github.sqlite')
   if query == '--auth'
     github.store_token(ARGV[1])
     github.rebuild_user_account
@@ -13,20 +13,17 @@ begin
     raise InvalidToken unless github.test_authentication
     if query == '--update'
       github.rebuild_user_repos_cache(db)
-      github.rebuild_user_issues_cache
-      github.rebuild_user_close_issues_cache
-      github.rebuild_user_assgined_issues_cache
+      github.rebuild_user_issues_cache(db)
+      github.rebuild_user_assigned_issues_cache(db)
     elsif query == '--repo'
       github.store_current_repo(ARGV[1])
-      github.rebuild_user_issues_cache
-      github.rebuild_user_close_issues_cache
-      github.rebuild_user_assgined_issues_cache
+      github.rebuild_user_issues_cache(db)
+      github.rebuild_user_assigned_issues_cache(db)
     elsif query == '--create'
       result = github.create(ARGV[1].tr('\\', ' '))
     elsif query == '--updateissues'
-      github.rebuild_user_issues_cache
-      github.rebuild_user_close_issues_cache
-      github.rebuild_user_assgined_issues_cache
+      github.cache_all_issues_for_repo(db)
+      github.cache_all_assigned_issues_for_repo(db)
     elsif query == '--searchrepos'
       results = github.search_repo(ARGV[1] || '', db)
       output = XmlBuilder.build do |xml|
@@ -45,12 +42,12 @@ begin
 
       puts output
     elsif query == '--searchissues'
-      results = github.search_issue(ARGV[1] || '')
+      results = github.search_issue(ARGV[1] || '', db)
       output = XmlBuilder.build do |xml|
         xml.items do
           if !results.empty?
-            results.each do |repo|
-              xml.item Item.new(repo['url'], repo['url'], repo['name'.gsub('<',' ')], repo['url'], 'yes')
+            results.each do |issue|
+              xml.item Item.new(issue['url'], issue['url'], issue['name'.gsub('<',' ')], issue['url'], 'yes')
             end
           elsif github.load_current_repo.empty?
             xml.item Item.new(
@@ -65,8 +62,9 @@ begin
       end
 
       puts output
+
     elsif query == '--searchassignedissues'
-      results = github.search_assigned_issue
+      results = github.search_assigned_issue(db)
       output = XmlBuilder.build do |xml|
         xml.items do
           if !results.empty?
@@ -87,13 +85,16 @@ begin
 
       puts output
     elsif query == '--searchallissue'
-      results = github.search_close_issue(ARGV[1] || '')
-      results += github.search_issue(ARGV[1] || '')
+      results = github.search_close_issue(ARGV[1] || '', db)
+      results.each do |issue|
+        issue['name'] = "#{issue['name']}[closed]"
+      end
+      results += github.search_issue(ARGV[1] || '', db)
       output = XmlBuilder.build do |xml|
         xml.items do
           if !results.empty?
-            results.each do |repo|
-              xml.item Item.new(repo['url'], repo['url'], repo['name'], repo['url'], 'yes')
+            results.each do |issue|
+              xml.item Item.new(issue['url'], issue['url'], issue['name'], issue['url'], 'yes')
             end
           elsif github.load_current_repo.empty?
             xml.item Item.new(
@@ -134,4 +135,6 @@ rescue InvalidToken
   end
 
   puts output
+ensure
+  db.close
 end
